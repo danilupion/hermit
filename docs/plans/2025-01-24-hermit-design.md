@@ -296,7 +296,40 @@ interface UserInfo {
 
 **Mocking:** MSW (Mock Service Worker) for HTTP and WebSocket mocking. MSW supports WebSocket via the `ws` namespace (since Nov 2024).
 
-**Approach:** Unit tests + integration tests from the start. Tests co-located with source as `*.test.ts`.
+**Approach:** Unit tests + integration tests from the start.
+
+### Test Location
+
+Tests MUST be co-located with source code, NOT in separate `__tests__/` folders:
+
+```
+src/
+├── auth.ts
+├── auth.test.ts        # ✓ co-located
+├── router.ts
+├── router.test.ts      # ✓ co-located
+└── utils/
+    ├── hash.ts
+    └── hash.test.ts    # ✓ co-located
+```
+
+### Coverage Targets
+
+| Package | Target | Rationale |
+|---------|--------|-----------|
+| @hermit/protocol | 90% | Pure logic, highly testable |
+| @hermit/relay | 80% | Business logic + I/O |
+| @hermit/agent | 70% | More I/O, tmux interaction harder to test |
+| @hermit/web | 70% | UI components, harder to cover all states |
+
+### Coverage Exclusions
+
+- `*.config.{js,ts}` — config files
+- `dist/**` — build output
+- `**/*.d.ts` — type definitions
+- `**/index.ts` — barrel exports (re-exports only)
+
+### Test Focus Per Package
 
 | Package | Test Focus |
 |---------|------------|
@@ -305,7 +338,8 @@ interface UserInfo {
 | @hermit/agent | Unit: config parsing, tmux command building. Integration: mocked relay connection |
 | @hermit/web | Component tests with @testing-library/react, mocked WebSocket context |
 
-**Integration test pattern for WebSocket:**
+### Integration Test Pattern for WebSocket
+
 ```typescript
 import { ws } from 'msw'
 import { setupServer } from 'msw/node'

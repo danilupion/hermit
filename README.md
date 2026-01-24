@@ -167,6 +167,8 @@ After documentation updates, evaluate if context window is sufficient for anothe
 ### Testing
 - All packages use Vitest
 - Use MSW for HTTP and WebSocket mocking
+- Tests MUST be co-located with source (`src/foo.test.ts`), NOT in `__tests__/` folders
+- Coverage targets: protocol 90%, relay 80%, agent 70%, web 70%
 - Tests must pass before marking tasks complete
 
 ### Process

@@ -66,7 +66,32 @@ hermit/
 - **Framework:** Vitest for all packages
 - **Mocking:** MSW for HTTP and WebSocket mocking
 - **Coverage:** Unit tests + integration tests from the start
-- **Test location:** `src/**/*.test.ts` co-located with source
+
+**Test location:** Co-located with source, NOT in `__tests__/` folders:
+```
+src/
+├── auth.ts
+├── auth.test.ts        # ✓ co-located
+├── router.ts
+├── router.test.ts      # ✓ co-located
+```
+
+**Coverage targets:**
+
+| Package | Target | Rationale |
+|---------|--------|-----------|
+| protocol | 90% | Pure logic, highly testable |
+| relay | 80% | Business logic + I/O |
+| agent | 70% | More I/O, tmux interaction harder to test |
+| web | 70% | UI components, harder to cover all states |
+
+**Coverage exclusions:**
+- `*.config.{js,ts}` — config files
+- `dist/**` — build output
+- `**/*.d.ts` — type definitions
+- `**/index.ts` — barrel exports (re-exports only)
+
+**Test focus per package:**
 
 | Package | Test Focus |
 |---------|------------|
