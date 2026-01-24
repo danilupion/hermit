@@ -290,6 +290,35 @@ interface UserInfo {
 }
 ```
 
+## Testing Strategy
+
+**Framework:** Vitest for all packages (using @slango.configs/vitest)
+
+**Mocking:** MSW (Mock Service Worker) for HTTP and WebSocket mocking. MSW supports WebSocket via the `ws` namespace (since Nov 2024).
+
+**Approach:** Unit tests + integration tests from the start. Tests co-located with source as `*.test.ts`.
+
+| Package | Test Focus |
+|---------|------------|
+| @hermit/protocol | Type compilation tests, runtime schema validation |
+| @hermit/relay | Unit: auth logic, session routing. Integration: WebSocket flows with MSW |
+| @hermit/agent | Unit: config parsing, tmux command building. Integration: mocked relay connection |
+| @hermit/web | Component tests with @testing-library/react, mocked WebSocket context |
+
+**Integration test pattern for WebSocket:**
+```typescript
+import { ws } from 'msw'
+import { setupServer } from 'msw/node'
+
+const server = setupServer(
+  ws.link('ws://localhost:3001/ws/agent').addEventListener('connection', ({ client }) => {
+    client.addEventListener('message', (event) => {
+      // Handle and respond to messages
+    })
+  })
+)
+```
+
 ## Development Setup
 
 **docker-compose.yml (infra only):**
