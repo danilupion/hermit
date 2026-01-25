@@ -1,0 +1,13 @@
+import { describe, expect, it } from 'vitest';
+
+import { app } from './index.js';
+
+describe('Health endpoint', () => {
+  it('returns ok status', async () => {
+    const res = await app.request('/health');
+    expect(res.status).toBe(200);
+
+    const body = await res.json();
+    expect(body).toEqual({ status: 'ok' });
+  });
+});
