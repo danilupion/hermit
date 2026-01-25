@@ -1,0 +1,155 @@
+import type { AgentMessage } from '@hermit/protocol/agent-messages.js';
+import type { WSContext, WSMessageReceive } from 'hono/ws';
+import type { WebSocket } from 'ws';
+
+import { safeParseAgentMessage } from '@hermit/protocol/schemas.js';
+
+import { findMachineById, updateMachineLastSeen } from '../repositories/machines.js';
+import {
+  addAgentSession,
+  getAgent,
+  registerAgent,
+  removeAgentSession,
+  unregisterAgent,
+  updateAgentSessions,
+} from '../registries/agents.js';
+import { getClientsAttachedToSession } from '../registries/clients.js';
+import { verifyMachineToken } from '../services/auth.js';
+
+type AgentState = {
+  machineId: string | null;
+  authenticated: boolean;
+};
+
+const sendToAgent = (ws: WSContext<WebSocket>, message: object): void => {
+  ws.send(JSON.stringify(message));
+};
+
+const broadcastToClients = (machineId: string, sessionId: string, message: object): void => {
+  const clients = getClientsAttachedToSession(machineId, sessionId);
+  const json = JSON.stringify(message);
+  for (const client of clients) {
+    client.ws.send(json);
+  }
+};
+
+const handleAgentMessage = async (
+  ws: WSContext<WebSocket>,
+  state: AgentState,
+  message: AgentMessage,
+): Promise<void> => {
+  if (message.type === 'register') {
+    const machine = await findMachineById(message.machineName);
+    if (!machine) {
+      sendToAgent(ws, { type: 'registered', success: false, error: 'Machine not found' });
+      return;
+    }
+
+    const valid = await verifyMachineToken(message.token, machine.token_hash);
+    if (!valid) {
+      sendToAgent(ws, { type: 'registered', success: false, error: 'Invalid token' });
+      return;
+    }
+
+    state.machineId = machine.id;
+    state.authenticated = true;
+
+    registerAgent(machine.id, machine.name, machine.user_id, ws);
+    await updateMachineLastSeen(machine.id);
+
+    sendToAgent(ws, { type: 'registered', success: true, machineId: machine.id });
+    sendToAgent(ws, { type: 'list_sessions' });
+
+    console.log(`Agent registered: ${machine.name} (${machine.id})`);
+    return;
+  }
+
+  if (!state.authenticated || !state.machineId) {
+    sendToAgent(ws, { type: 'error', code: 'NOT_AUTHENTICATED', message: 'Not authenticated' });
+    return;
+  }
+
+  switch (message.type) {
+    case 'sessions':
+      updateAgentSessions(state.machineId, message.sessions);
+      break;
+
+    case 'session_started':
+      addAgentSession(state.machineId, message.session);
+      break;
+
+    case 'session_ended':
+      removeAgentSession(state.machineId, message.sessionId);
+      break;
+
+    case 'data':
+      broadcastToClients(state.machineId, message.sessionId, {
+        type: 'data',
+        sessionId: message.sessionId,
+        data: message.data,
+      });
+      break;
+
+    case 'pong':
+      break;
+  }
+};
+
+export const createAgentHandlers = () => {
+  const state: AgentState = {
+    machineId: null,
+    authenticated: false,
+  };
+
+  return {
+    onMessage: async (
+      event: MessageEvent<WSMessageReceive>,
+      ws: WSContext<WebSocket>,
+    ): Promise<void> => {
+      const data = typeof event.data === 'string' ? event.data : String(event.data);
+      let parsed: unknown;
+
+      try {
+        parsed = JSON.parse(data);
+      } catch {
+        sendToAgent(ws, {
+          type: 'error',
+          code: 'INVALID_JSON',
+          message: 'Invalid JSON',
+        });
+        return;
+      }
+
+      const result = safeParseAgentMessage(parsed);
+      if (!result.success) {
+        sendToAgent(ws, {
+          type: 'error',
+          code: 'INVALID_MESSAGE',
+          message: 'Invalid message format',
+        });
+        return;
+      }
+
+      const message = result.data as AgentMessage;
+      await handleAgentMessage(ws, state, message);
+    },
+
+    onClose: (): void => {
+      if (state.machineId) {
+        unregisterAgent(state.machineId);
+        console.log(`Agent disconnected: ${state.machineId}`);
+      }
+    },
+
+    onError: (error: Event): void => {
+      console.error('Agent WebSocket error:', error);
+    },
+  };
+};
+
+export const sendToAgentByMachineId = (machineId: string, message: object): boolean => {
+  const agent = getAgent(machineId);
+  if (!agent) return false;
+  agent.ws.send(JSON.stringify(message));
+  return true;
+};

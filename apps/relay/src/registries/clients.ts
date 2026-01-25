@@ -1,17 +1,22 @@
 import type { ClientId, MachineId, SessionId, UserId } from '@hermit/protocol/types.js';
-import type { ServerWebSocket } from '@hono/node-ws';
+import type { WSContext } from 'hono/ws';
+import type { WebSocket } from 'ws';
 
 export type ClientConnection = {
   clientId: ClientId;
   userId: UserId;
-  ws: ServerWebSocket;
+  ws: WSContext<WebSocket>;
   attachedSessions: Map<SessionId, MachineId>;
   connectedAt: Date;
 };
 
 const clients = new Map<ClientId, ClientConnection>();
 
-export const registerClient = (clientId: ClientId, userId: UserId, ws: ServerWebSocket): void => {
+export const registerClient = (
+  clientId: ClientId,
+  userId: UserId,
+  ws: WSContext<WebSocket>,
+): void => {
   clients.set(clientId, {
     clientId,
     userId,

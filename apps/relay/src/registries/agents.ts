@@ -1,11 +1,12 @@
 import type { MachineId, SessionInfo } from '@hermit/protocol/types.js';
-import type { ServerWebSocket } from '@hono/node-ws';
+import type { WSContext } from 'hono/ws';
+import type { WebSocket } from 'ws';
 
 export type AgentConnection = {
   machineId: MachineId;
   machineName: string;
   userId: string;
-  ws: ServerWebSocket;
+  ws: WSContext<WebSocket>;
   sessions: Map<string, SessionInfo>;
   connectedAt: Date;
 };
@@ -16,7 +17,7 @@ export const registerAgent = (
   machineId: MachineId,
   machineName: string,
   userId: string,
-  ws: ServerWebSocket,
+  ws: WSContext<WebSocket>,
 ): void => {
   agents.set(machineId, {
     machineId,

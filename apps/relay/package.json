@@ -39,6 +39,7 @@
     "@slango.configs/vitest": "2.0.2",
     "@types/node": "24.0.10",
     "@types/pg": "8.15.4",
+    "@types/ws": "^8.18.1",
     "@vitest/coverage-v8": "4.0.17",
     "eslint": "9.39.2",
     "msw": "2.12.7",

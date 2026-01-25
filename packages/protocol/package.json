@@ -5,7 +5,7 @@
   "description": "Hermit shared protocol types",
   "type": "module",
   "exports": {
-    "./*": {
+    "./*.js": {
       "import": "./dist/*.js",
       "types": "./dist/*.d.ts"
     }
