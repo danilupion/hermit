@@ -4,20 +4,21 @@
 
 Hermit is a self-hosted terminal relay system. Users run an agent on their machines that connects to a relay server, enabling terminal access from anywhere via a web interface. Sessions persist via tmux.
 
-**Current Session:** 1
+**Current Session:** 3
 **Current Milestone:** M1 (Basic Connection)
+**Current Epic:** E1.3 Complete, E1.4 or E1.5 next
 
 ## Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| Monorepo | pnpm workspaces + Turborepo |
-| Agent | TypeScript + Bun (compiles to single binary) |
-| Relay | TypeScript + Node.js + Hono |
-| Web | Next.js 16.1.x |
-| Database | PostgreSQL |
-| Testing | Vitest + MSW (including WebSocket mocking) |
-| Shared configs | @slango.configs/* (eslint, prettier, typescript, vitest) |
+| Component      | Technology                                                |
+| -------------- | --------------------------------------------------------- |
+| Monorepo       | pnpm workspaces + Turborepo                               |
+| Agent          | TypeScript + Bun (compiles to single binary)              |
+| Relay          | TypeScript + Node.js + Hono                               |
+| Web            | Next.js 16.1.x                                            |
+| Database       | PostgreSQL                                                |
+| Testing        | Vitest + MSW (including WebSocket mocking)                |
+| Shared configs | @slango.configs/\* (eslint, prettier, typescript, vitest) |
 
 ## Architecture
 
@@ -37,13 +38,13 @@ User Machine                    Server (k8s)                 Browser
 ```
 hermit/
 ├── apps/
-│   ├── agent/      # @hermit/agent
-│   ├── relay/      # @hermit/relay
-│   └── web/        # @hermit/web
+│   ├── agent/      # @hermit/agent (not yet created)
+│   ├── relay/      # @hermit/relay ✓
+│   └── web/        # @hermit/web (not yet created)
 ├── packages/
-│   └── protocol/   # @hermit/protocol (shared types)
+│   └── protocol/   # @hermit/protocol ✓
 └── docker/
-    └── docker-compose.yml  # postgres for dev
+    └── docker-compose.yml  # postgres for dev ✓
 ```
 
 ## Development Rules
@@ -56,7 +57,7 @@ hermit/
 
 ### Code Style
 
-- Follow patterns in @slango.configs/* packages
+- Follow patterns in @slango.configs/\* packages
 - Use `type` over `interface` for type definitions (consistency with protocol)
 - Prefer explicit returns over implicit
 - No default exports (except where framework requires, e.g., Next.js pages)
@@ -68,6 +69,7 @@ hermit/
 - **Coverage:** Unit tests + integration tests from the start
 
 **Test location:** Co-located with source, NOT in `__tests__/` folders:
+
 ```
 src/
 ├── auth.ts
@@ -78,14 +80,15 @@ src/
 
 **Coverage targets:**
 
-| Package | Target | Rationale |
-|---------|--------|-----------|
-| protocol | 90% | Pure logic, highly testable |
-| relay | 80% | Business logic + I/O |
-| agent | 70% | More I/O, tmux interaction harder to test |
-| web | 70% | UI components, harder to cover all states |
+| Package  | Target | Rationale                                 |
+| -------- | ------ | ----------------------------------------- |
+| protocol | 90%    | Pure logic, highly testable               |
+| relay    | 80%    | Business logic + I/O                      |
+| agent    | 70%    | More I/O, tmux interaction harder to test |
+| web      | 70%    | UI components, harder to cover all states |
 
 **Coverage exclusions:**
+
 - `*.config.{js,ts}` — config files
 - `dist/**` — build output
 - `**/*.d.ts` — type definitions
@@ -93,12 +96,12 @@ src/
 
 **Test focus per package:**
 
-| Package | Test Focus |
-|---------|------------|
-| protocol | Type compilation, schema validation |
-| relay | Auth logic, WebSocket routing, REST endpoints |
-| agent | Config parsing, tmux commands (mocked), reconnection logic |
-| web | Component tests with @testing-library/react |
+| Package  | Test Focus                                                 |
+| -------- | ---------------------------------------------------------- |
+| protocol | Type compilation, schema validation                        |
+| relay    | Auth logic, WebSocket routing, REST endpoints              |
+| agent    | Config parsing, tmux commands (mocked), reconnection logic |
+| web      | Component tests with @testing-library/react                |
 
 ### Git Commits
 
@@ -109,17 +112,19 @@ src/
 ## Key Files
 
 - `docs/plans/2025-01-24-hermit-design.md` - Full design document
-- `docs/roadmap.md` - Milestone roadmap and stories (to be created)
-- `SCRATCHPAD.md` - Session handoff notes (to be created)
+- `docs/plans/2025-01-24-m1-implementation.md` - M1 implementation plan (E1.1, E1.2)
+- `docs/plans/2025-01-24-e1.3-relay-foundation.md` - E1.3 implementation plan
+- `docs/roadmap.md` - Milestone roadmap and stories
+- `SCRATCHPAD.md` - Session handoff notes
 
 ## Current State
 
 - [x] Design document approved
-- [ ] Monorepo scaffolding
-- [ ] Protocol package
-- [ ] Relay basic structure
-- [ ] Agent basic structure
-- [ ] Web basic structure
+- [x] Monorepo scaffolding (E1.1)
+- [x] Protocol package (E1.2)
+- [x] Relay foundation (E1.3)
+- [ ] Agent foundation (E1.4)
+- [ ] Web foundation (E1.5)
 
 ## Milestones
 
