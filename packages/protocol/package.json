@@ -1,0 +1,34 @@
+{
+  "name": "@hermit/protocol",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Hermit shared protocol types",
+  "type": "module",
+  "exports": {
+    "./*": {
+      "import": "./dist/*.js",
+      "types": "./dist/*.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build:watch": "tsc --watch -p tsconfig.build.json",
+    "build:check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix --max-warnings 0",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@slango.configs/eslint": "1.1.45",
+    "@slango.configs/typescript": "1.0.7",
+    "@slango.configs/vitest": "2.0.2",
+    "@vitest/coverage-v8": "4.0.17",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3",
+    "vitest": "4.0.17"
+  }
+}
