@@ -1,7 +1,7 @@
+export type ClientId = string;
 export type MachineId = string;
 export type SessionId = string;
 export type UserId = string;
-export type ClientId = string;
 
 export type SessionInfo = {
   id: SessionId;
