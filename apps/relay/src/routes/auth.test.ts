@@ -51,7 +51,11 @@ describe('Auth routes', () => {
       });
 
       expect(res.status).toBe(200);
-      const body = await res.json();
+      const body = (await res.json()) as {
+        user: { email: string };
+        accessToken: string;
+        refreshToken: string;
+      };
       expect(body.user.email).toBe('test@example.com');
       expect(body.accessToken).toBe('mock-access-token');
       expect(body.refreshToken).toBe('mock-refresh-token');
@@ -126,7 +130,7 @@ describe('Auth routes', () => {
       });
 
       expect(res.status).toBe(200);
-      const body = await res.json();
+      const body = (await res.json()) as { accessToken: string };
       expect(body.accessToken).toBe('mock-access-token');
     });
 

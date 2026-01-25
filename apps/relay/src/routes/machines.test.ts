@@ -56,7 +56,7 @@ describe('Machine routes', () => {
       });
 
       expect(res.status).toBe(200);
-      const body = await res.json();
+      const body = (await res.json()) as { machines: Array<{ name: string }> };
       expect(body.machines).toHaveLength(1);
       expect(body.machines[0].name).toBe('workstation');
     });
@@ -88,7 +88,7 @@ describe('Machine routes', () => {
       });
 
       expect(res.status).toBe(200);
-      const body = await res.json();
+      const body = (await res.json()) as { machine: { name: string }; token: string };
       expect(body.machine.name).toBe('my-laptop');
       expect(body.token).toBe('hmt_test-token');
     });

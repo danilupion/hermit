@@ -4,7 +4,6 @@ import type { WebSocket } from 'ws';
 
 import { safeParseAgentMessage } from '@hermit/protocol/schemas.js';
 
-import { findMachineById, updateMachineLastSeen } from '../repositories/machines.js';
 import {
   addAgentSession,
   getAgent,
@@ -14,6 +13,7 @@ import {
   updateAgentSessions,
 } from '../registries/agents.js';
 import { getClientsAttachedToSession } from '../registries/clients.js';
+import { findMachineById, updateMachineLastSeen } from '../repositories/machines.js';
 import { verifyMachineToken } from '../services/auth.js';
 
 type AgentState = {
@@ -106,7 +106,10 @@ export const createAgentHandlers = () => {
       event: MessageEvent<WSMessageReceive>,
       ws: WSContext<WebSocket>,
     ): Promise<void> => {
-      const data = typeof event.data === 'string' ? event.data : String(event.data);
+      const data =
+        typeof event.data === 'string'
+          ? event.data
+          : new TextDecoder().decode(event.data as ArrayBuffer);
       let parsed: unknown;
 
       try {

@@ -4,8 +4,6 @@ import type { WebSocket } from 'ws';
 
 import { safeParseClientMessage } from '@hermit/protocol/schemas.js';
 
-import { findMachinesByUserId } from '../repositories/machines.js';
-import { findUserById } from '../repositories/users.js';
 import {
   getAgent,
   getAgentsByUserId,
@@ -19,6 +17,8 @@ import {
   registerClient,
   unregisterClient,
 } from '../registries/clients.js';
+import { findMachinesByUserId } from '../repositories/machines.js';
+import { findUserById } from '../repositories/users.js';
 import { verifyToken } from '../services/auth.js';
 import { sendToAgentByMachineId } from './agent-handler.js';
 
@@ -189,7 +189,10 @@ export const createClientHandlers = () => {
       event: MessageEvent<WSMessageReceive>,
       ws: WSContext<WebSocket>,
     ): Promise<void> => {
-      const data = typeof event.data === 'string' ? event.data : String(event.data);
+      const data =
+        typeof event.data === 'string'
+          ? event.data
+          : new TextDecoder().decode(event.data as ArrayBuffer);
       let parsed: unknown;
 
       try {
