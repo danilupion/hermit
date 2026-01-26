@@ -1,8 +1,8 @@
 import type { RelayToAgentMessage } from '@hermit/protocol/agent-messages.js';
 import type { SessionInfo } from '@hermit/protocol/types.js';
-import WebSocket from 'ws';
 
 import { safeParseRelayToAgentMessage } from '@hermit/protocol/schemas.js';
+import WebSocket from 'ws';
 
 export type RelayConnectionConfig = {
   relayUrl: string;
@@ -45,7 +45,15 @@ export const createRelayConnection = (config: RelayConnectionConfig): RelayConne
   };
 
   const handleMessage = (data: WebSocket.RawData): void => {
-    const str = data.toString();
+    // Convert WebSocket.RawData (Buffer | ArrayBuffer | Buffer[]) to string
+    let str: string;
+    if (Buffer.isBuffer(data)) {
+      str = data.toString('utf-8');
+    } else if (Array.isArray(data)) {
+      str = Buffer.concat(data).toString('utf-8');
+    } else {
+      str = Buffer.from(data).toString('utf-8');
+    }
     let parsed: unknown;
 
     try {

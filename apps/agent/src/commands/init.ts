@@ -4,9 +4,9 @@ import * as readline from 'node:readline';
 import {
   configExists,
   getConfigPath,
+  type HermitConfig,
   loadConfig,
   saveConfig,
-  type HermitConfig,
 } from '../config.js';
 import { isTmuxAvailable } from '../tmux.js';
 

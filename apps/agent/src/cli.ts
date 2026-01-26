@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 
-import { initCommand } from './commands/index.js';
+import { connectCommand, initCommand, listCommand, newCommand } from './commands/index.js';
 import { VERSION } from './index.js';
 
 const program = new Command();
@@ -21,22 +21,15 @@ program
   .command('connect')
   .description('Connect to the relay server')
   .option('-d, --daemon', 'Run in background')
-  .action(() => {
-    console.log('hermit connect - not yet implemented');
-  });
+  .action(connectCommand);
 
-program
-  .command('list')
-  .description('List tmux sessions')
-  .action(() => {
-    console.log('hermit list - not yet implemented');
-  });
+program.command('list').alias('ls').description('List tmux sessions').action(listCommand);
 
 program
   .command('new <name>')
   .description('Create a new tmux session')
-  .action((name: string) => {
-    console.log(`hermit new ${name} - not yet implemented`);
-  });
+  .option('-c, --command <cmd>', 'Initial command to run')
+  .option('-a, --attach', 'Attach to session after creation')
+  .action(newCommand);
 
 program.parse();

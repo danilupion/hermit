@@ -134,9 +134,8 @@ describe('RelayConnection', () => {
       );
 
       expect(mockConfig.onError).toHaveBeenCalled();
-      expect((mockConfig.onError as ReturnType<typeof vi.fn>).mock.calls[0][0].message).toBe(
-        'Invalid token',
-      );
+      const errorArg = (mockConfig.onError as ReturnType<typeof vi.fn>).mock.calls[0][0] as Error;
+      expect(errorArg.message).toBe('Invalid token');
     });
 
     it('handles list_sessions message', () => {

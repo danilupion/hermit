@@ -1,6 +1,6 @@
-import { execFileSync, spawn } from 'node:child_process';
-
 import type { SessionInfo } from '@hermit/protocol/types.js';
+
+import { execFileSync, spawn } from 'node:child_process';
 
 export type TmuxSession = {
   id: string;
