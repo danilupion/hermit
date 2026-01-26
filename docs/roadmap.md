@@ -51,16 +51,16 @@
 
 ### E1.4: Agent Foundation
 
-| Story | Description                                      | Status  |
-| ----- | ------------------------------------------------ | ------- |
-| 1.4.1 | Create @hermit/agent package skeleton            | Pending |
-| 1.4.2 | Implement config manager (~/.hermit/config.json) | Pending |
-| 1.4.3 | Implement `hermit init` command                  | Pending |
-| 1.4.4 | Implement tmux controller (list/create sessions) | Pending |
-| 1.4.5 | Implement WebSocket connection to relay          | Pending |
-| 1.4.6 | Implement `hermit connect` command               | Pending |
-| 1.4.7 | Implement `hermit list` command                  | Pending |
-| 1.4.8 | Implement `hermit new <name>` command            | Pending |
+| Story | Description                                      | Status   |
+| ----- | ------------------------------------------------ | -------- |
+| 1.4.1 | Create @hermit/agent package skeleton            | Complete |
+| 1.4.2 | Implement config manager (~/.hermit/config.json) | Complete |
+| 1.4.3 | Implement `hermit init` command                  | Complete |
+| 1.4.4 | Implement tmux controller (list/create sessions) | Complete |
+| 1.4.5 | Implement WebSocket connection to relay          | Complete |
+| 1.4.6 | Implement `hermit connect` command               | Complete |
+| 1.4.7 | Implement `hermit list` command                  | Complete |
+| 1.4.8 | Implement `hermit new <name>` command            | Complete |
 
 ### E1.5: Web Foundation
 

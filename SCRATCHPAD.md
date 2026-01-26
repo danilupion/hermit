@@ -4,6 +4,80 @@ Session handoff notes. Most recent at top.
 
 ---
 
+## Session 4 → Session 5
+
+**Date:** 2025-01-26
+
+### Completed
+
+- E1.4: Agent Foundation (all 8 stories complete)
+  - 1.4.1: Created @hermit/agent package skeleton
+  - 1.4.2: Implemented config manager (~/.hermit/config.json)
+  - 1.4.3: Implemented `hermit init` command
+  - 1.4.4: Implemented tmux controller (list/create sessions)
+  - 1.4.5: Implemented WebSocket connection to relay
+  - 1.4.6: Implemented `hermit connect` command
+  - 1.4.7: Implemented `hermit list` command
+  - 1.4.8: Implemented `hermit new <name>` command
+- Added Panda CSS as design system choice for web package
+- Created E1.4 implementation plan
+
+### Files Created/Modified
+
+**New files:**
+
+- `apps/agent/` - Complete agent package
+  - `src/index.ts` - Version export
+  - `src/cli.ts` - CLI entry point with commander.js
+  - `src/config.ts` - Config manager for ~/.hermit/config.json
+  - `src/config.test.ts` - Config manager tests (10 tests)
+  - `src/tmux.ts` - Tmux controller (list/create/attach sessions)
+  - `src/tmux.test.ts` - Tmux controller tests (12 tests)
+  - `src/relay-connection.ts` - WebSocket client with reconnection
+  - `src/relay-connection.test.ts` - Relay connection tests (17 tests)
+  - `src/commands/init.ts` - Interactive init command
+  - `src/commands/connect.ts` - Connect to relay command
+  - `src/commands/list.ts` - List tmux sessions command
+  - `src/commands/new.ts` - Create new session command
+  - `src/commands/index.ts` - Barrel export
+- `docs/plans/2025-01-26-e1.4-agent-foundation.md` - Implementation plan
+
+### Test Status
+
+- **Protocol:** 12 tests passing
+- **Agent:** 39 tests passing
+- **Relay:** 44 tests passing
+- **Total:** 95 tests passing
+- `pnpm check` passes all lint, type-check, and tests
+
+### Dependency Versions Used
+
+| Package   | Version |
+| --------- | ------- |
+| commander | 14.0.2  |
+| ws        | 8.19.0  |
+| tsx       | 4.21.0  |
+
+### Next Session Priorities
+
+1. Begin E1.5: Web Foundation
+   - Create @hermit/web package with Next.js
+   - Implement login page
+   - Implement WebSocket context provider
+   - Implement machine list page
+2. Or run integration tests between agent and relay
+
+### Notes
+
+- Agent uses tsx for dev (Bun not installed on this machine)
+- Bun is still target for production binary compilation
+- Config stored at ~/.hermit/config.json
+- Machine tokens use `hmt_` prefix
+- WebSocket connection has exponential backoff (1s, 2s, 4s, 8s, 16s, 30s)
+- tmux commands use execFileSync for shell injection safety
+
+---
+
 ## Session 3 → Session 4
 
 **Date:** 2025-01-24
