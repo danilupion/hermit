@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 
+import { initCommand } from './commands/index.js';
 import { VERSION } from './index.js';
 
 const program = new Command();
@@ -10,9 +11,11 @@ program.name('hermit').description('Hermit agent - terminal relay client').versi
 program
   .command('init')
   .description('Initialize hermit configuration')
-  .action(() => {
-    console.log('hermit init - not yet implemented');
-  });
+  .option('-r, --relay-url <url>', 'Relay WebSocket URL')
+  .option('-n, --machine-name <name>', 'Name for this machine')
+  .option('-t, --token <token>', 'Machine token from relay')
+  .option('-f, --force', 'Overwrite existing configuration')
+  .action(initCommand);
 
 program
   .command('connect')
