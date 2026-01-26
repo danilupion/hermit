@@ -9,17 +9,18 @@ Hermit is a self-hosted system that allows users to "carry" their terminal sessi
 
 ## Technology Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| Package manager | pnpm workspaces | Established, familiar tooling |
-| Agent runtime | Bun | Compiles to single binary for easy distribution |
-| Relay runtime | Node.js | Battle-tested for long-running WebSocket servers, runs in k8s |
-| Relay framework | Hono + @hono/node-ws | Lightweight, TypeScript-first, good WebSocket support |
-| Web framework | Next.js 16.1.x | SSR, routing, familiar |
-| Database | PostgreSQL | Proper database from the start, k8s-friendly |
-| Auth (MVP) | JWT + machine tokens | Simple, secure, OAuth can be added later |
-| Shared configs | @slango.configs/* | Reuse existing eslint, prettier, typescript, vitest configs |
-| Package namespace | @hermit/* | Consistent naming for workspace packages |
+| Decision          | Choice               | Rationale                                                     |
+| ----------------- | -------------------- | ------------------------------------------------------------- |
+| Package manager   | pnpm workspaces      | Established, familiar tooling                                 |
+| Agent runtime     | Bun                  | Compiles to single binary for easy distribution               |
+| Relay runtime     | Node.js              | Battle-tested for long-running WebSocket servers, runs in k8s |
+| Relay framework   | Hono + @hono/node-ws | Lightweight, TypeScript-first, good WebSocket support         |
+| Web framework     | Next.js 16.1.x       | SSR, routing, familiar                                        |
+| Design system     | Panda CSS            | Type-safe CSS-in-JS, zero runtime, great DX                   |
+| Database          | PostgreSQL           | Proper database from the start, k8s-friendly                  |
+| Auth (MVP)        | JWT + machine tokens | Simple, secure, OAuth can be added later                      |
+| Shared configs    | @slango.configs/\*   | Reuse existing eslint, prettier, typescript, vitest configs   |
+| Package namespace | @hermit/\*           | Consistent naming for workspace packages                      |
 
 ## Architecture
 
@@ -98,12 +99,14 @@ hermit/
 The agent runs on user machines, managing tmux sessions and maintaining a persistent WebSocket connection to the relay.
 
 **Components:**
+
 - `ConfigManager` - Loads ~/.hermit/config.json, stores machine token and relay URL
 - `TmuxController` - Spawns/lists/attaches tmux sessions, wraps tmux CLI
 - `RelayConnection` - WebSocket to relay with exponential backoff reconnection
 - `SessionMultiplexer` - Routes I/O between relay and multiple tmux sessions
 
 **Config file** (`~/.hermit/config.json`):
+
 ```json
 {
   "machineId": "dani-workstation",
@@ -114,6 +117,7 @@ The agent runs on user machines, managing tmux sessions and maintaining a persis
 ```
 
 **CLI commands:**
+
 - `hermit init` - prompts for relay URL, registers with relay, saves config
 - `hermit connect` - establishes WebSocket, syncs existing tmux sessions
 - `hermit connect --daemon` - same but backgrounds the process
@@ -128,6 +132,7 @@ The agent runs on user machines, managing tmux sessions and maintaining a persis
 The relay is the hub — accepts connections from agents and web clients, routes terminal I/O, and manages authentication.
 
 **Components:**
+
 - `HTTP Server` - Hono with @hono/node-ws for WebSocket
 - `AgentRegistry` - Connected agents indexed by machineId, tracks online status
 - `ClientRegistry` - Connected web clients and their session subscriptions
@@ -136,10 +141,12 @@ The relay is the hub — accepts connections from agents and web clients, routes
 - `Database` - PostgreSQL via connection pool
 
 **WebSocket Endpoints:**
+
 - `/ws/agent` - agents connect here, authenticate with machine token
 - `/ws/client` - web clients connect here, authenticate with JWT
 
 **REST Endpoints:**
+
 - `POST /auth/login` - email/password → JWT
 - `POST /auth/register` - create account (can disable in prod)
 - `GET /api/machines` - list user's machines (requires JWT)
@@ -150,18 +157,21 @@ The relay is the hub — accepts connections from agents and web clients, routes
 Next.js 16.1.x app providing the terminal UI.
 
 **Pages:**
+
 - `/login` - email/password form
 - `/` - dashboard: list of machines, online status
 - `/machines/[machineId]` - sessions for that machine
 - `/terminal/[machineId]/[sessionId]` - full terminal view
 
 **Key Components:**
+
 - `MachineList` - shows machines with online/offline status
 - `SessionList` - shows sessions for selected machine
 - `Terminal` - xterm.js wrapped in React, handles resize
 - `TerminalTabs` - multi-session tab bar (Milestone 3)
 
 **State Management:**
+
 - WebSocket connection managed via React context
 - Server state (machines, sessions) from WebSocket events
 - Local UI state with useState/useReducer
@@ -203,6 +213,7 @@ CREATE TABLE refresh_tokens (
 ```
 
 **Notes:**
+
 - Machine tokens hashed with bcrypt or argon2
 - Sessions are ephemeral - not persisted, tracked in-memory by relay
 
@@ -215,23 +226,23 @@ All messages use JSON with typed envelopes defined in `@hermit/protocol`.
 ```typescript
 // Agent → Relay
 type AgentMessage =
-  | { type: "register"; machineId: string; token: string }
-  | { type: "sessions"; sessions: SessionInfo[] }
-  | { type: "data"; sessionId: string; data: string }  // base64
-  | { type: "session_started"; session: SessionInfo }
-  | { type: "session_ended"; sessionId: string }
-  | { type: "pong" };
+  | { type: 'register'; machineId: string; token: string }
+  | { type: 'sessions'; sessions: SessionInfo[] }
+  | { type: 'data'; sessionId: string; data: string } // base64
+  | { type: 'session_started'; session: SessionInfo }
+  | { type: 'session_ended'; sessionId: string }
+  | { type: 'pong' };
 
 // Relay → Agent
 type RelayToAgentMessage =
-  | { type: "registered"; success: boolean }
-  | { type: "list_sessions" }
-  | { type: "start_session"; name: string; command?: string }
-  | { type: "attach"; sessionId: string; clientId: string }
-  | { type: "detach"; sessionId: string; clientId: string }
-  | { type: "data"; sessionId: string; data: string }
-  | { type: "resize"; sessionId: string; cols: number; rows: number }
-  | { type: "ping" };
+  | { type: 'registered'; success: boolean }
+  | { type: 'list_sessions' }
+  | { type: 'start_session'; name: string; command?: string }
+  | { type: 'attach'; sessionId: string; clientId: string }
+  | { type: 'detach'; sessionId: string; clientId: string }
+  | { type: 'data'; sessionId: string; data: string }
+  | { type: 'resize'; sessionId: string; cols: number; rows: number }
+  | { type: 'ping' };
 ```
 
 ### Client ↔ Relay
@@ -239,30 +250,30 @@ type RelayToAgentMessage =
 ```typescript
 // Client → Relay
 type ClientMessage =
-  | { type: "auth"; token: string }
-  | { type: "list_machines" }
-  | { type: "list_sessions"; machineId: string }
-  | { type: "attach"; machineId: string; sessionId: string }
-  | { type: "detach"; sessionId: string }
-  | { type: "create_session"; machineId: string; name: string; command?: string }
-  | { type: "data"; sessionId: string; data: string }
-  | { type: "resize"; sessionId: string; cols: number; rows: number }
-  | { type: "pong" };
+  | { type: 'auth'; token: string }
+  | { type: 'list_machines' }
+  | { type: 'list_sessions'; machineId: string }
+  | { type: 'attach'; machineId: string; sessionId: string }
+  | { type: 'detach'; sessionId: string }
+  | { type: 'create_session'; machineId: string; name: string; command?: string }
+  | { type: 'data'; sessionId: string; data: string }
+  | { type: 'resize'; sessionId: string; cols: number; rows: number }
+  | { type: 'pong' };
 
 // Relay → Client
 type RelayToClientMessage =
-  | { type: "authenticated"; user: UserInfo }
-  | { type: "machines"; machines: MachineInfo[] }
-  | { type: "sessions"; machineId: string; sessions: SessionInfo[] }
-  | { type: "attached"; sessionId: string }
-  | { type: "detached"; sessionId: string }
-  | { type: "data"; sessionId: string; data: string }
-  | { type: "machine_online"; machine: MachineInfo }
-  | { type: "machine_offline"; machineId: string }
-  | { type: "session_started"; machineId: string; session: SessionInfo }
-  | { type: "session_ended"; machineId: string; sessionId: string }
-  | { type: "error"; code: string; message: string }
-  | { type: "ping" };
+  | { type: 'authenticated'; user: UserInfo }
+  | { type: 'machines'; machines: MachineInfo[] }
+  | { type: 'sessions'; machineId: string; sessions: SessionInfo[] }
+  | { type: 'attached'; sessionId: string }
+  | { type: 'detached'; sessionId: string }
+  | { type: 'data'; sessionId: string; data: string }
+  | { type: 'machine_online'; machine: MachineInfo }
+  | { type: 'machine_offline'; machineId: string }
+  | { type: 'session_started'; machineId: string; session: SessionInfo }
+  | { type: 'session_ended'; machineId: string; sessionId: string }
+  | { type: 'error'; code: string; message: string }
+  | { type: 'ping' };
 ```
 
 ### Shared Types
@@ -315,12 +326,12 @@ src/
 
 ### Coverage Targets
 
-| Package | Target | Rationale |
-|---------|--------|-----------|
-| @hermit/protocol | 90% | Pure logic, highly testable |
-| @hermit/relay | 80% | Business logic + I/O |
-| @hermit/agent | 70% | More I/O, tmux interaction harder to test |
-| @hermit/web | 70% | UI components, harder to cover all states |
+| Package          | Target | Rationale                                 |
+| ---------------- | ------ | ----------------------------------------- |
+| @hermit/protocol | 90%    | Pure logic, highly testable               |
+| @hermit/relay    | 80%    | Business logic + I/O                      |
+| @hermit/agent    | 70%    | More I/O, tmux interaction harder to test |
+| @hermit/web      | 70%    | UI components, harder to cover all states |
 
 ### Coverage Exclusions
 
@@ -331,36 +342,37 @@ src/
 
 ### Test Focus Per Package
 
-| Package | Test Focus |
-|---------|------------|
-| @hermit/protocol | Type compilation tests, runtime schema validation |
-| @hermit/relay | Unit: auth logic, session routing. Integration: WebSocket flows with MSW |
-| @hermit/agent | Unit: config parsing, tmux command building. Integration: mocked relay connection |
-| @hermit/web | Component tests with @testing-library/react, mocked WebSocket context |
+| Package          | Test Focus                                                                        |
+| ---------------- | --------------------------------------------------------------------------------- |
+| @hermit/protocol | Type compilation tests, runtime schema validation                                 |
+| @hermit/relay    | Unit: auth logic, session routing. Integration: WebSocket flows with MSW          |
+| @hermit/agent    | Unit: config parsing, tmux command building. Integration: mocked relay connection |
+| @hermit/web      | Component tests with @testing-library/react, mocked WebSocket context             |
 
 ### Integration Test Pattern for WebSocket
 
 ```typescript
-import { ws } from 'msw'
-import { setupServer } from 'msw/node'
+import { ws } from 'msw';
+import { setupServer } from 'msw/node';
 
 const server = setupServer(
   ws.link('ws://localhost:3001/ws/agent').addEventListener('connection', ({ client }) => {
     client.addEventListener('message', (event) => {
       // Handle and respond to messages
-    })
-  })
-)
+    });
+  }),
+);
 ```
 
 ## Development Setup
 
 **docker-compose.yml (infra only):**
+
 ```yaml
 services:
   postgres:
     image: postgres:17
-    ports: ["5432:5432"]
+    ports: ['5432:5432']
     environment:
       POSTGRES_USER: hermit
       POSTGRES_PASSWORD: hermit
@@ -373,6 +385,7 @@ volumes:
 ```
 
 **Development workflow:**
+
 ```bash
 docker compose up -d          # start postgres
 pnpm install                  # install dependencies
@@ -382,18 +395,21 @@ pnpm dev                      # runs turbo dev (relay + web + agent in watch mod
 ## MVP Milestones
 
 ### Milestone 1: Basic Connection
+
 - Agent connects to relay via WebSocket
 - Agent creates/lists tmux sessions
 - Web authenticates and lists machines/sessions
 - Web displays terminal (read-only)
 
 ### Milestone 2: Bidirectional I/O
+
 - Full terminal I/O through relay
 - Resize handling
 - Multiple sessions per machine
 - Session persistence across agent restart
 
 ### Milestone 3: Production Ready
+
 - Reconnection with buffering
 - Multi-tab UI
 - Mobile-responsive
@@ -401,6 +417,7 @@ pnpm dev                      # runs turbo dev (relay + web + agent in watch mod
 - Proper auth
 
 ### Milestone 4: Polish
+
 - OAuth2 integration (optional)
 - Read-only viewer mode
 - PWA support

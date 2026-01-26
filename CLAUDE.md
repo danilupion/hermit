@@ -4,9 +4,9 @@
 
 Hermit is a self-hosted terminal relay system. Users run an agent on their machines that connects to a relay server, enabling terminal access from anywhere via a web interface. Sessions persist via tmux.
 
-**Current Session:** 3
+**Current Session:** 4
 **Current Milestone:** M1 (Basic Connection)
-**Current Epic:** E1.3 Complete, E1.4 or E1.5 next
+**Current Epic:** E1.3 Complete, E1.4 in progress
 
 ## Tech Stack
 
@@ -15,7 +15,7 @@ Hermit is a self-hosted terminal relay system. Users run an agent on their machi
 | Monorepo       | pnpm workspaces + Turborepo                               |
 | Agent          | TypeScript + Bun (compiles to single binary)              |
 | Relay          | TypeScript + Node.js + Hono                               |
-| Web            | Next.js 16.1.x                                            |
+| Web            | Next.js 16.1.x + Panda CSS                                |
 | Database       | PostgreSQL                                                |
 | Testing        | Vitest + MSW (including WebSocket mocking)                |
 | Shared configs | @slango.configs/\* (eslint, prettier, typescript, vitest) |
@@ -38,9 +38,9 @@ User Machine                    Server (k8s)                 Browser
 ```
 hermit/
 ├── apps/
-│   ├── agent/      # @hermit/agent (not yet created)
+│   ├── agent/      # @hermit/agent (in progress)
 │   ├── relay/      # @hermit/relay ✓
-│   └── web/        # @hermit/web (not yet created)
+│   └── web/        # @hermit/web (not yet created) - Next.js + Panda CSS
 ├── packages/
 │   └── protocol/   # @hermit/protocol ✓
 └── docker/
@@ -114,6 +114,7 @@ src/
 - `docs/plans/2025-01-24-hermit-design.md` - Full design document
 - `docs/plans/2025-01-24-m1-implementation.md` - M1 implementation plan (E1.1, E1.2)
 - `docs/plans/2025-01-24-e1.3-relay-foundation.md` - E1.3 implementation plan
+- `docs/plans/2025-01-26-e1.4-agent-foundation.md` - E1.4 implementation plan
 - `docs/roadmap.md` - Milestone roadmap and stories
 - `SCRATCHPAD.md` - Session handoff notes
 
