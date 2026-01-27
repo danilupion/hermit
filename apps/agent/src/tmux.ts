@@ -18,7 +18,11 @@ const runTmux = (args: string[]): string => {
   } catch (error) {
     const execError = error as { status?: number; stderr?: Buffer | string };
     const stderr = execError.stderr?.toString() || '';
-    if (execError.status === 1 && stderr.includes('no server running')) {
+    // Handle "no server running" or "error connecting" (no tmux sessions)
+    if (
+      execError.status === 1 &&
+      (stderr.includes('no server running') || stderr.includes('error connecting'))
+    ) {
       return '';
     }
     throw error;
@@ -58,9 +62,13 @@ export const listSessions = (): TmuxSession[] => {
 
 export const sessionExists = (name: string): boolean => {
   try {
-    runTmux(['has-session', '-t', name]);
+    execFileSync('tmux', ['has-session', '-t', name], {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
     return true;
   } catch {
+    // Session doesn't exist, or tmux server not running
     return false;
   }
 };
