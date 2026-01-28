@@ -19,6 +19,8 @@ export type ClientAttachMessage = {
   type: 'attach';
   machineId: MachineId;
   sessionId: SessionId;
+  requestReplay?: boolean;
+  replayLines?: number;
 };
 
 export type ClientDetachMessage = {
@@ -122,6 +124,13 @@ export type RelayErrorMessage = {
   message: string;
 };
 
+export type RelaySessionReplayMessage = {
+  type: 'session_replay';
+  sessionId: SessionId;
+  data: string; // base64 encoded scrollback
+  lineCount: number;
+};
+
 export type RelayClientPingMessage = {
   type: 'ping';
 };
@@ -137,5 +146,6 @@ export type RelayToClientMessage =
   | RelayMachineOfflineMessage
   | RelaySessionStartedMessage
   | RelaySessionEndedMessage
+  | RelaySessionReplayMessage
   | RelayErrorMessage
   | RelayClientPingMessage;

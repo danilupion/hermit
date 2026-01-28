@@ -72,6 +72,20 @@ const handleAgentMessage = async (
   switch (message.type) {
     case 'sessions':
       updateAgentSessions(state.machineId, message.sessions);
+
+      // Re-attach any clients that were viewing these sessions (agent reconnect)
+      for (const session of message.sessions) {
+        const clients = getClientsAttachedToSession(state.machineId, session.id);
+        if (clients.length > 0) {
+          // Tell agent to start streaming again (no replay since clients have context)
+          sendToAgent(ws, {
+            type: 'attach',
+            sessionId: session.id,
+            clientId: clients[0].clientId, // Use first client as reference
+            requestReplay: false,
+          });
+        }
+      }
       break;
 
     case 'session_started':
@@ -87,6 +101,15 @@ const handleAgentMessage = async (
         type: 'data',
         sessionId: message.sessionId,
         data: message.data,
+      });
+      break;
+
+    case 'session_replay':
+      broadcastToClients(state.machineId, message.sessionId, {
+        type: 'session_replay',
+        sessionId: message.sessionId,
+        data: message.data,
+        lineCount: message.lineCount,
       });
       break;
 

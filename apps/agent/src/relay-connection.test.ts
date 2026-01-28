@@ -191,7 +191,37 @@ describe('RelayConnection', () => {
         JSON.stringify({ type: 'attach', sessionId: 'sess-1', clientId: 'client-1' }),
       );
 
-      expect(mockConfig.onAttach).toHaveBeenCalledWith('sess-1', 'client-1');
+      expect(mockConfig.onAttach).toHaveBeenCalledWith({
+        sessionId: 'sess-1',
+        clientId: 'client-1',
+        requestReplay: undefined,
+        replayLines: undefined,
+      });
+    });
+
+    it('handles attach message with replay options', () => {
+      const connection = createRelayConnection(mockConfig);
+      connection.connect();
+
+      const ws = MockWebSocket.getLastInstance()!;
+      ws.emit('open');
+      ws.emit(
+        'message',
+        JSON.stringify({
+          type: 'attach',
+          sessionId: 'sess-1',
+          clientId: 'client-1',
+          requestReplay: true,
+          replayLines: 500,
+        }),
+      );
+
+      expect(mockConfig.onAttach).toHaveBeenCalledWith({
+        sessionId: 'sess-1',
+        clientId: 'client-1',
+        requestReplay: true,
+        replayLines: 500,
+      });
     });
 
     it('handles data message', () => {
@@ -331,6 +361,27 @@ describe('RelayConnection', () => {
 
       expect(ws.send).toHaveBeenCalledWith(
         JSON.stringify({ type: 'data', sessionId: 'sess-1', data: 'dGVzdA==' }),
+      );
+    });
+
+    it('sendSessionReplay sends session_replay message', () => {
+      const connection = createRelayConnection(mockConfig);
+      connection.connect();
+
+      const ws = MockWebSocket.getLastInstance()!;
+      ws.emit('open');
+
+      ws.send.mockClear();
+
+      connection.sendSessionReplay('sess-1', 'c2Nyb2xsYmFjaw==', 1000);
+
+      expect(ws.send).toHaveBeenCalledWith(
+        JSON.stringify({
+          type: 'session_replay',
+          sessionId: 'sess-1',
+          data: 'c2Nyb2xsYmFjaw==',
+          lineCount: 1000,
+        }),
       );
     });
   });

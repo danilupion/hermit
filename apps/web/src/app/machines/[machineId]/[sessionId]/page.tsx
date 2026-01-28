@@ -33,8 +33,8 @@ const TerminalPage = () => {
   useEffect(() => {
     if (!connected || !machineId || !sessionId) return;
 
-    // Attach to session
-    send({ type: 'attach', machineId, sessionId });
+    // Attach to session with replay request
+    send({ type: 'attach', machineId, sessionId, requestReplay: true, replayLines: 1000 });
 
     // Listen for messages
     const unsubscribe = onMessage((msg) => {
@@ -42,6 +42,18 @@ const TerminalPage = () => {
         case 'attached':
           if (msg.sessionId === sessionId) {
             setAttached(true);
+          }
+          break;
+        case 'session_replay':
+          if (msg.sessionId === sessionId) {
+            // Clear terminal and write scrollback replay
+            try {
+              terminalRef.current?.clear();
+              const decoded = atob(msg.data);
+              terminalRef.current?.write(decoded);
+            } catch {
+              // Ignore decoding errors
+            }
           }
           break;
         case 'data':

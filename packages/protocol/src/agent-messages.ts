@@ -28,6 +28,13 @@ export type AgentSessionEndedMessage = {
   sessionId: SessionId;
 };
 
+export type AgentSessionReplayMessage = {
+  type: 'session_replay';
+  sessionId: SessionId;
+  data: string; // base64 encoded scrollback
+  lineCount: number;
+};
+
 export type AgentPongMessage = {
   type: 'pong';
 };
@@ -38,6 +45,7 @@ export type AgentMessage =
   | AgentDataMessage
   | AgentSessionStartedMessage
   | AgentSessionEndedMessage
+  | AgentSessionReplayMessage
   | AgentPongMessage;
 
 // Relay → Agent messages
@@ -62,6 +70,8 @@ export type RelayAttachMessage = {
   type: 'attach';
   sessionId: SessionId;
   clientId: string;
+  requestReplay?: boolean;
+  replayLines?: number;
 };
 
 export type RelayDetachMessage = {

@@ -29,6 +29,12 @@ export const AgentMessageSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('data'), sessionId: z.string(), data: z.string() }),
   z.object({ type: z.literal('session_started'), session: SessionInfoSchema }),
   z.object({ type: z.literal('session_ended'), sessionId: z.string() }),
+  z.object({
+    type: z.literal('session_replay'),
+    sessionId: z.string(),
+    data: z.string(),
+    lineCount: z.number(),
+  }),
   z.object({ type: z.literal('pong') }),
 ]);
 
@@ -42,7 +48,13 @@ export const RelayToAgentMessageSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('list_sessions') }),
   z.object({ type: z.literal('start_session'), name: z.string(), command: z.string().optional() }),
-  z.object({ type: z.literal('attach'), sessionId: z.string(), clientId: z.string() }),
+  z.object({
+    type: z.literal('attach'),
+    sessionId: z.string(),
+    clientId: z.string(),
+    requestReplay: z.boolean().optional(),
+    replayLines: z.number().optional(),
+  }),
   z.object({ type: z.literal('detach'), sessionId: z.string(), clientId: z.string() }),
   z.object({ type: z.literal('data'), sessionId: z.string(), data: z.string() }),
   z.object({
@@ -59,7 +71,13 @@ export const ClientMessageSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('auth'), token: z.string() }),
   z.object({ type: z.literal('list_machines') }),
   z.object({ type: z.literal('list_sessions'), machineId: z.string() }),
-  z.object({ type: z.literal('attach'), machineId: z.string(), sessionId: z.string() }),
+  z.object({
+    type: z.literal('attach'),
+    machineId: z.string(),
+    sessionId: z.string(),
+    requestReplay: z.boolean().optional(),
+    replayLines: z.number().optional(),
+  }),
   z.object({ type: z.literal('detach'), sessionId: z.string() }),
   z.object({
     type: z.literal('create_session'),
@@ -97,6 +115,12 @@ export const RelayToClientMessageSchema = z.discriminatedUnion('type', [
     session: SessionInfoSchema,
   }),
   z.object({ type: z.literal('session_ended'), machineId: z.string(), sessionId: z.string() }),
+  z.object({
+    type: z.literal('session_replay'),
+    sessionId: z.string(),
+    data: z.string(),
+    lineCount: z.number(),
+  }),
   z.object({ type: z.literal('error'), code: z.string(), message: z.string() }),
   z.object({ type: z.literal('ping') }),
 ]);

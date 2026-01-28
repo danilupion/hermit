@@ -109,6 +109,8 @@ const handleClientMessage = async (
         type: 'attach',
         sessionId: message.sessionId,
         clientId: state.clientId,
+        requestReplay: message.requestReplay ?? true,
+        replayLines: message.replayLines ?? 1000,
       });
       sendToClient(ws, { type: 'attached', sessionId: message.sessionId });
       break;

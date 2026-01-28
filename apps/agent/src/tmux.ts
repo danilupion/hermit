@@ -114,6 +114,14 @@ export const capturePane = (sessionId: string): string => {
   return runTmux(['capture-pane', '-t', `$${sessionId}`, '-p']);
 };
 
+export const captureScrollback = (sessionId: string, lines: number = 1000): string => {
+  // -p: print to stdout
+  // -S -N: start N lines from history (negative = from scrollback)
+  // -e: include escape sequences (colors)
+  // -J: join wrapped lines
+  return runTmux(['capture-pane', '-t', `$${sessionId}`, '-p', '-S', `-${lines}`, '-e', '-J']);
+};
+
 export type PtyProcess = {
   onData: (callback: (data: string) => void) => void;
   write: (data: string) => void;

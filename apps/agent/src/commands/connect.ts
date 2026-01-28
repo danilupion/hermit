@@ -4,6 +4,7 @@ import { loadConfig, saveConfig } from '../config.js';
 import { createRelayConnection, type RelayConnection } from '../relay-connection.js';
 import {
   attachToSession,
+  captureScrollback,
   createSession,
   listSessions,
   type PtyProcess,
@@ -61,8 +62,18 @@ export const connectCommand = (options: ConnectOptions): void => {
       }
     },
 
-    onAttach: (sessionId, clientId) => {
+    onAttach: ({ sessionId, clientId, requestReplay, replayLines }) => {
       console.log(`Client ${clientId} attaching to session ${sessionId}`);
+
+      // Send scrollback replay if requested (default: true)
+      if (requestReplay !== false) {
+        const lines = replayLines ?? 1000;
+        const scrollback = captureScrollback(sessionId, lines);
+        if (scrollback) {
+          const base64 = Buffer.from(scrollback).toString('base64');
+          relayConnection?.sendSessionReplay(sessionId, base64, lines);
+        }
+      }
 
       // If not already attached, start streaming output
       if (!attachedSessions.has(sessionId)) {

@@ -4,6 +4,13 @@ import type { SessionInfo } from '@hermit/protocol/types.js';
 import { safeParseRelayToAgentMessage } from '@hermit/protocol/schemas.js';
 import WebSocket from 'ws';
 
+export type AttachOptions = {
+  sessionId: string;
+  clientId: string;
+  requestReplay?: boolean;
+  replayLines?: number;
+};
+
 export type RelayConnectionConfig = {
   relayUrl: string;
   machineName: string;
@@ -11,7 +18,7 @@ export type RelayConnectionConfig = {
   onRegistered: (machineId: string) => void;
   onListSessions: () => SessionInfo[];
   onStartSession: (name: string, command?: string) => SessionInfo | null;
-  onAttach: (sessionId: string, clientId: string) => void;
+  onAttach: (options: AttachOptions) => void;
   onDetach: (sessionId: string, clientId: string) => void;
   onData: (sessionId: string, data: string) => void;
   onResize: (sessionId: string, cols: number, rows: number) => void;
@@ -26,6 +33,7 @@ export type RelayConnection = {
   sendSessions: (sessions: SessionInfo[]) => void;
   sendSessionStarted: (session: SessionInfo) => void;
   sendSessionEnded: (sessionId: string) => void;
+  sendSessionReplay: (sessionId: string, data: string, lineCount: number) => void;
   sendData: (sessionId: string, data: string) => void;
 };
 
@@ -93,7 +101,12 @@ export const createRelayConnection = (config: RelayConnectionConfig): RelayConne
       }
 
       case 'attach':
-        config.onAttach(message.sessionId, message.clientId);
+        config.onAttach({
+          sessionId: message.sessionId,
+          clientId: message.clientId,
+          requestReplay: message.requestReplay,
+          replayLines: message.replayLines,
+        });
         break;
 
       case 'detach':
@@ -192,6 +205,8 @@ export const createRelayConnection = (config: RelayConnectionConfig): RelayConne
     sendSessions: (sessions) => send({ type: 'sessions', sessions }),
     sendSessionStarted: (session) => send({ type: 'session_started', session }),
     sendSessionEnded: (sessionId) => send({ type: 'session_ended', sessionId }),
+    sendSessionReplay: (sessionId, data, lineCount) =>
+      send({ type: 'session_replay', sessionId, data, lineCount }),
     sendData: (sessionId, data) => send({ type: 'data', sessionId, data }),
   };
 };

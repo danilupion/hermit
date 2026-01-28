@@ -14,6 +14,7 @@ vi.mock('node:child_process', () => ({
 import { execFileSync } from 'node:child_process';
 
 import {
+  captureScrollback,
   createSession,
   isTmuxAvailable,
   killSession,
@@ -164,6 +165,41 @@ describe('Tmux controller', () => {
 
       const info = toSessionInfo(tmuxSession);
       expect(info.attachedClients).toBe(0);
+    });
+  });
+
+  describe('captureScrollback', () => {
+    it('captures scrollback with correct arguments', () => {
+      const scrollbackContent = 'line 1\nline 2\nline 3';
+      mockExecFileSync.mockReturnValueOnce(scrollbackContent as unknown as Buffer);
+
+      const result = captureScrollback('5');
+
+      expect(mockExecFileSync).toHaveBeenCalledWith(
+        'tmux',
+        ['capture-pane', '-t', '$5', '-p', '-S', '-1000', '-e', '-J'],
+        expect.any(Object),
+      );
+      expect(result).toBe(scrollbackContent);
+    });
+
+    it('uses custom line count when provided', () => {
+      mockExecFileSync.mockReturnValueOnce('content' as unknown as Buffer);
+
+      captureScrollback('5', 500);
+
+      expect(mockExecFileSync).toHaveBeenCalledWith(
+        'tmux',
+        ['capture-pane', '-t', '$5', '-p', '-S', '-500', '-e', '-J'],
+        expect.any(Object),
+      );
+    });
+
+    it('returns empty string when no scrollback', () => {
+      mockExecFileSync.mockReturnValueOnce('' as unknown as Buffer);
+
+      const result = captureScrollback('5');
+      expect(result).toBe('');
     });
   });
 });
