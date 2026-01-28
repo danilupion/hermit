@@ -2,12 +2,12 @@
 
 ## Milestones Overview
 
-| Milestone | Name              | Status   |
-| --------- | ----------------- | -------- |
-| M1        | Basic Connection  | Complete |
-| M2        | Bidirectional I/O | Planned  |
-| M3        | Production Ready  | Planned  |
-| M4        | Polish            | Planned  |
+| Milestone | Name              | Status      |
+| --------- | ----------------- | ----------- |
+| M1        | Basic Connection  | Complete    |
+| M2        | Bidirectional I/O | In Progress |
+| M3        | Production Ready  | Planned     |
+| M4        | Polish            | Planned     |
 
 ---
 
@@ -81,14 +81,20 @@
 
 ### E2.1: Terminal I/O
 
-- Full bidirectional data flow
-- Resize handling
-- Multiple sessions per machine
+| Story | Description                             | Status   |
+| ----- | --------------------------------------- | -------- |
+| 2.1.1 | Add terminal input to web UI            | Complete |
+| 2.1.2 | Verify resize handling works end-to-end | Pending  |
+| 2.1.3 | Handle multiple attached clients        | Pending  |
+| 2.1.4 | Add session creation from web UI        | Pending  |
 
 ### E2.2: Session Persistence
 
-- Agent reconnection with session sync
-- Buffering during disconnect
+| Story | Description                            | Status  |
+| ----- | -------------------------------------- | ------- |
+| 2.2.1 | Buffer output during client disconnect | Pending |
+| 2.2.2 | Replay buffered output on reconnect    | Pending |
+| 2.2.3 | Agent reconnection with session sync   | Pending |
 
 ---
 

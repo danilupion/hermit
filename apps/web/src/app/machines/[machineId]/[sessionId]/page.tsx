@@ -79,8 +79,16 @@ const TerminalPage = () => {
     [connected, attached, sessionId, send],
   );
 
-  // Note: onData is not implemented for M1 (read-only terminal)
-  // Input will be added in M2
+  const handleData = useCallback(
+    (data: string) => {
+      if (connected && attached) {
+        // Encode data as base64 and send to relay
+        const base64 = btoa(data);
+        send({ type: 'data', sessionId, data: base64 });
+      }
+    },
+    [connected, attached, sessionId, send],
+  );
 
   if (!isAuthenticated()) {
     return null;
@@ -137,12 +145,14 @@ const TerminalPage = () => {
           >
             {attached ? 'Connected' : 'Connecting...'}
           </span>
-          <span className={css({ color: 'muted', fontSize: 'xs' })}>Read-only (M1)</span>
+          <span className={css({ color: 'muted', fontSize: 'xs' })}>
+            {attached ? 'Interactive' : ''}
+          </span>
         </div>
       </header>
 
       <main className={css({ flex: 1, p: '4', overflow: 'hidden' })}>
-        <Terminal ref={terminalRef} onResize={handleResize} />
+        <Terminal ref={terminalRef} onData={handleData} onResize={handleResize} />
       </main>
     </div>
   );
