@@ -9,6 +9,7 @@ type RelayState = {
   setConnected: (connected: boolean) => void;
   setMachines: (machines: MachineInfo[]) => void;
   setSessions: (machineId: string, sessions: SessionInfo[]) => void;
+  addSession: (machineId: string, session: SessionInfo) => void;
   clearSessions: (machineId: string) => void;
   reset: () => void;
 };
@@ -22,6 +23,13 @@ export const useRelayStore = create<RelayState>((set) => ({
   setSessions: (machineId, sessions) =>
     set((state) => ({
       sessions: { ...state.sessions, [machineId]: sessions },
+    })),
+  addSession: (machineId, session) =>
+    set((state) => ({
+      sessions: {
+        ...state.sessions,
+        [machineId]: [...(state.sessions[machineId] || []), session],
+      },
     })),
   clearSessions: (machineId) =>
     set((state) => {

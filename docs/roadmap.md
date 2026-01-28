@@ -86,7 +86,7 @@
 | 2.1.1 | Add terminal input to web UI            | Complete |
 | 2.1.2 | Verify resize handling works end-to-end | Pending  |
 | 2.1.3 | Handle multiple attached clients        | Pending  |
-| 2.1.4 | Add session creation from web UI        | Pending  |
+| 2.1.4 | Add session creation from web UI        | Complete |
 
 ### E2.2: Session Persistence
 

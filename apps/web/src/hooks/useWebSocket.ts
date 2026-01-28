@@ -21,6 +21,7 @@ export const useWebSocket = (): UseWebSocketResult => {
   const setConnected = useRelayStore((s) => s.setConnected);
   const setMachines = useRelayStore((s) => s.setMachines);
   const setSessions = useRelayStore((s) => s.setSessions);
+  const addSession = useRelayStore((s) => s.addSession);
   const connected = useRelayStore((s) => s.connected);
 
   const clientRef = useRef<WebSocketClient | null>(null);
@@ -48,6 +49,9 @@ export const useWebSocket = (): UseWebSocketResult => {
         case 'sessions':
           setSessions(message.machineId, message.sessions);
           break;
+        case 'session_started':
+          addSession(message.machineId, message.session);
+          break;
         // Other message types will be handled by specific components
       }
     });
@@ -59,7 +63,7 @@ export const useWebSocket = (): UseWebSocketResult => {
       client.disconnect();
       clientRef.current = null;
     };
-  }, [token, setConnected, setMachines, setSessions]);
+  }, [token, setConnected, setMachines, setSessions, addSession]);
 
   const send = useCallback((message: ClientMessage) => {
     clientRef.current?.send(message);

@@ -120,6 +120,44 @@ describe('useRelayStore', () => {
     expect(useRelayStore.getState().sessions['machine-2']).toEqual(sessions);
   });
 
+  it('should add a session to a machine', () => {
+    const { addSession, setSessions } = useRelayStore.getState();
+    const existingSession = {
+      id: 'session-1',
+      name: 'main',
+      command: 'bash',
+      createdAt: '2025-01-27',
+      attachedClients: 1,
+    };
+    const newSession = {
+      id: 'session-2',
+      name: 'dev',
+      command: 'zsh',
+      createdAt: '2025-01-28',
+      attachedClients: 0,
+    };
+
+    setSessions('machine-1', [existingSession]);
+    addSession('machine-1', newSession);
+
+    expect(useRelayStore.getState().sessions['machine-1']).toEqual([existingSession, newSession]);
+  });
+
+  it('should add a session to a machine with no existing sessions', () => {
+    const { addSession } = useRelayStore.getState();
+    const newSession = {
+      id: 'session-1',
+      name: 'main',
+      command: 'bash',
+      createdAt: '2025-01-28',
+      attachedClients: 0,
+    };
+
+    addSession('machine-1', newSession);
+
+    expect(useRelayStore.getState().sessions['machine-1']).toEqual([newSession]);
+  });
+
   it('should reset all state', () => {
     const { setConnected, setMachines, setSessions, reset } = useRelayStore.getState();
 
