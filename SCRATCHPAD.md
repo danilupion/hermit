@@ -6,75 +6,65 @@ Session handoff notes. Most recent at top.
 
 ## Session 4 → Session 5
 
-**Date:** 2025-01-26
+**Date:** 2025-01-27
 
 ### Completed
 
 - E1.4: Agent Foundation (all 8 stories complete)
-  - 1.4.1: Created @hermit/agent package skeleton
-  - 1.4.2: Implemented config manager (~/.hermit/config.json)
-  - 1.4.3: Implemented `hermit init` command
-  - 1.4.4: Implemented tmux controller (list/create sessions)
-  - 1.4.5: Implemented WebSocket connection to relay
-  - 1.4.6: Implemented `hermit connect` command
-  - 1.4.7: Implemented `hermit list` command
-  - 1.4.8: Implemented `hermit new <name>` command
-- Added Panda CSS as design system choice for web package
-- Created E1.4 implementation plan
+  - 1.4.1-1.4.8: All agent commands implemented
+  - Bug fix: Handle tmux "error connecting" when server not running
+- E1.5: Web Foundation (1 of 6 stories complete)
+  - 1.5.1: Created @hermit/web package with Next.js + Panda CSS
+- Created E1.5 implementation plan
 
 ### Files Created/Modified
 
 **New files:**
 
-- `apps/agent/` - Complete agent package
-  - `src/index.ts` - Version export
-  - `src/cli.ts` - CLI entry point with commander.js
-  - `src/config.ts` - Config manager for ~/.hermit/config.json
-  - `src/config.test.ts` - Config manager tests (10 tests)
-  - `src/tmux.ts` - Tmux controller (list/create/attach sessions)
-  - `src/tmux.test.ts` - Tmux controller tests (12 tests)
-  - `src/relay-connection.ts` - WebSocket client with reconnection
-  - `src/relay-connection.test.ts` - Relay connection tests (17 tests)
-  - `src/commands/init.ts` - Interactive init command
-  - `src/commands/connect.ts` - Connect to relay command
-  - `src/commands/list.ts` - List tmux sessions command
-  - `src/commands/new.ts` - Create new session command
-  - `src/commands/index.ts` - Barrel export
-- `docs/plans/2025-01-26-e1.4-agent-foundation.md` - Implementation plan
+- `apps/web/` - Web package skeleton
+  - `package.json` - Next.js 16.1.5, Panda CSS, xterm.js
+  - `panda.config.ts` - Dark theme design tokens
+  - `src/app/layout.tsx` - Root layout
+  - `src/app/page.tsx` - Home redirect to login
+  - `src/app/login/page.tsx` - Login page placeholder
+  - `src/styled-system/` - Panda CSS generated files
+- `docs/plans/2025-01-27-e1.5-web-foundation.md` - Implementation plan
 
 ### Test Status
 
 - **Protocol:** 12 tests passing
 - **Agent:** 39 tests passing
 - **Relay:** 44 tests passing
+- **Web:** 0 tests (passWithNoTests enabled)
 - **Total:** 95 tests passing
-- `pnpm check` passes all lint, type-check, and tests
 
 ### Dependency Versions Used
 
-| Package   | Version |
-| --------- | ------- |
-| commander | 14.0.2  |
-| ws        | 8.19.0  |
-| tsx       | 4.21.0  |
+| Package       | Version |
+| ------------- | ------- |
+| next          | 16.1.5  |
+| react         | 19.2.3  |
+| @pandacss/dev | 1.8.1   |
+| @xterm/xterm  | 6.0.0   |
+| zustand       | 5.0.10  |
+| concurrently  | 9.2.1   |
 
 ### Next Session Priorities
 
-1. Begin E1.5: Web Foundation
-   - Create @hermit/web package with Next.js
-   - Implement login page
-   - Implement WebSocket context provider
-   - Implement machine list page
-2. Or run integration tests between agent and relay
+1. Continue E1.5: Web Foundation
+   - 1.5.2: Implement login page (auth store, API client, form)
+   - 1.5.3: Implement WebSocket context provider
+   - 1.5.4: Implement machine list page
+   - 1.5.5: Implement session list page
+   - 1.5.6: Implement terminal view (read-only)
+2. After E1.5, M1 is complete - can do integration demo
 
 ### Notes
 
-- Agent uses tsx for dev (Bun not installed on this machine)
-- Bun is still target for production binary compilation
-- Config stored at ~/.hermit/config.json
-- Machine tokens use `hmt_` prefix
-- WebSocket connection has exponential backoff (1s, 2s, 4s, 8s, 16s, 30s)
-- tmux commands use execFileSync for shell injection safety
+- Web uses Next.js App Router with Panda CSS
+- Design tokens set up with dark Catppuccin-style theme
+- xterm.js included for terminal rendering in 1.5.6
+- See `docs/plans/2025-01-27-e1.5-web-foundation.md` for detailed implementation plan
 
 ---
 

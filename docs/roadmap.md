@@ -64,14 +64,14 @@
 
 ### E1.5: Web Foundation
 
-| Story | Description                                 | Status  |
-| ----- | ------------------------------------------- | ------- |
-| 1.5.1 | Create @hermit/web package with Next.js     | Pending |
-| 1.5.2 | Implement login page                        | Pending |
-| 1.5.3 | Implement WebSocket context provider        | Pending |
-| 1.5.4 | Implement machine list page                 | Pending |
-| 1.5.5 | Implement session list for selected machine | Pending |
-| 1.5.6 | Implement basic terminal view (read-only)   | Pending |
+| Story | Description                                 | Status   |
+| ----- | ------------------------------------------- | -------- |
+| 1.5.1 | Create @hermit/web package with Next.js     | Complete |
+| 1.5.2 | Implement login page                        | Pending  |
+| 1.5.3 | Implement WebSocket context provider        | Pending  |
+| 1.5.4 | Implement machine list page                 | Pending  |
+| 1.5.5 | Implement session list for selected machine | Pending  |
+| 1.5.6 | Implement basic terminal view (read-only)   | Pending  |
 
 ---
 

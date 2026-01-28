@@ -6,7 +6,7 @@ Hermit is a self-hosted terminal relay system. Users run an agent on their machi
 
 **Current Session:** 4
 **Current Milestone:** M1 (Basic Connection)
-**Current Epic:** E1.4 Complete, E1.5 next
+**Current Epic:** E1.5 in progress (1.5.1 complete)
 
 ## Tech Stack
 
@@ -40,7 +40,7 @@ hermit/
 ├── apps/
 │   ├── agent/      # @hermit/agent ✓
 │   ├── relay/      # @hermit/relay ✓
-│   └── web/        # @hermit/web (not yet created) - Next.js + Panda CSS
+│   └── web/        # @hermit/web (in progress) - Next.js + Panda CSS
 ├── packages/
 │   └── protocol/   # @hermit/protocol ✓
 └── docker/
@@ -115,6 +115,7 @@ src/
 - `docs/plans/2025-01-24-m1-implementation.md` - M1 implementation plan (E1.1, E1.2)
 - `docs/plans/2025-01-24-e1.3-relay-foundation.md` - E1.3 implementation plan
 - `docs/plans/2025-01-26-e1.4-agent-foundation.md` - E1.4 implementation plan
+- `docs/plans/2025-01-27-e1.5-web-foundation.md` - E1.5 implementation plan
 - `docs/roadmap.md` - Milestone roadmap and stories
 - `SCRATCHPAD.md` - Session handoff notes
 
