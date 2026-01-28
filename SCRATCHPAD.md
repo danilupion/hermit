@@ -4,6 +4,51 @@ Session handoff notes. Most recent at top.
 
 ---
 
+## Session 6 (Current)
+
+**Date:** 2025-01-28
+
+### Completed
+
+- Continued M2 from previous session
+- E2.1: Terminal I/O
+  - 2.1.1: Add terminal input to web UI (from previous session)
+  - 2.1.4: Add session creation from web UI
+
+### Files Modified
+
+- `apps/web/src/stores/relay.ts` - Added `addSession` method
+- `apps/web/src/stores/relay.test.ts` - Added tests for `addSession`
+- `apps/web/src/hooks/useWebSocket.ts` - Handle `session_started` message
+- `apps/web/src/app/machines/[machineId]/page.tsx` - New Session button and form
+
+### Infrastructure
+
+- Moved `docker-compose.yml` to project root
+- PostgreSQL 18 on port 5490 (to avoid conflicts with parallel projects)
+- Updated relay db/pool.ts connection string
+
+### Test Status
+
+- **Protocol:** 12 tests passing
+- **Agent:** 39 tests passing
+- **Relay:** 44 tests passing
+- **Web:** 32 tests passing
+- **Total:** 127 tests passing
+
+### Remaining E2.1 Stories
+
+- 2.1.2: Verify resize handling works end-to-end
+- 2.1.3: Handle multiple attached clients
+
+### Next Session Priorities
+
+1. Test E2.1 features end-to-end
+2. Complete remaining E2.1 stories (2.1.2, 2.1.3)
+3. Begin E2.2: Session Persistence
+
+---
+
 ## Session 5 → Session 6
 
 **Date:** 2025-01-28
@@ -19,6 +64,9 @@ Session handoff notes. Most recent at top.
   - 1.5.6: Implemented terminal view (read-only with xterm.js)
 
 **M1: Basic Connection is now complete!**
+
+- M2: Bidirectional I/O started
+  - 2.1.1: Add terminal input to web UI
 
 ### Files Created/Modified
 
@@ -56,22 +104,9 @@ Session handoff notes. Most recent at top.
 - **Web:** 30 tests passing
 - **Total:** 125 tests passing
 
-### Next Session Priorities
-
-1. **M1 Integration Demo** - Test end-to-end flow:
-   - Start relay with `pnpm --filter @hermit/relay dev`
-   - Start web with `pnpm --filter @hermit/web dev`
-   - Run agent with `pnpm --filter @hermit/agent dev connect`
-   - Verify machines appear in web UI
-   - Verify sessions list and terminal view work
-2. Begin M2: Bidirectional I/O
-   - Add terminal input support
-   - Handle resize events
-   - Support multiple sessions per machine
-
 ### Notes
 
-- Terminal view is **read-only** in M1 - input will be added in M2
+- Terminal is now **interactive** - input support added in M2/2.1.1
 - WebSocket reconnection uses fixed 2s delay - exponential backoff will be added in M3
 - Catppuccin-style dark theme used throughout
 - xterm.js CSS imported statically for build compatibility
