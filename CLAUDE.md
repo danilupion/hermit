@@ -43,8 +43,7 @@ hermit/
 │   └── web/        # @hermit/web ✓ - Next.js + Panda CSS
 ├── packages/
 │   └── protocol/   # @hermit/protocol ✓
-└── docker/
-    └── docker-compose.yml  # postgres for dev ✓
+└── docker-compose.yml  # postgres:18 on port 5490
 ```
 
 ## Development Rules

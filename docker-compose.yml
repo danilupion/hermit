@@ -1,14 +1,14 @@
 services:
   postgres:
-    image: postgres:17
+    image: postgres:18
     ports:
-      - '5432:5432'
+      - '5490:5432'
     environment:
       POSTGRES_USER: hermit
       POSTGRES_PASSWORD: hermit
       POSTGRES_DB: hermit
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - hermit-pgdata:/var/lib/postgresql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U hermit']
       interval: 5s
@@ -16,4 +16,4 @@ services:
       retries: 5
 
 volumes:
-  pgdata:
+  hermit-pgdata:

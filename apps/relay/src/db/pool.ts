@@ -3,7 +3,7 @@ import pg from 'pg';
 const { Pool } = pg;
 
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://hermit:hermit@localhost:5432/hermit',
+  connectionString: process.env.DATABASE_URL || 'postgresql://hermit:hermit@localhost:5490/hermit',
 });
 
 export const query = <T extends pg.QueryResultRow>(
