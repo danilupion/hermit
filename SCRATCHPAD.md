@@ -4,7 +4,7 @@ Session handoff notes. Most recent at top.
 
 ---
 
-## Session 6 (Current)
+## Session 6 → Session 7
 
 **Date:** 2025-01-28
 
@@ -29,6 +29,7 @@ Session handoff notes. Most recent at top.
 - Moved `docker-compose.yml` to project root
 - PostgreSQL 18 on port 5490 (to avoid conflicts with parallel projects)
 - Updated relay db/pool.ts connection string
+- Moved styled-system outside src, gitignored, purged from git history
 
 ### Test Status
 
