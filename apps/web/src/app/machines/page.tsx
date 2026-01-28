@@ -1,5 +1,6 @@
 'use client';
 
+import { css } from '@styled-system/css';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -7,7 +8,6 @@ import { MachineList } from '../../components/machines/MachineList';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAuthStore } from '../../stores/auth';
 import { useRelayStore } from '../../stores/relay';
-import { css } from '../../styled-system/css';
 
 const MachinesPage = () => {
   const router = useRouter();

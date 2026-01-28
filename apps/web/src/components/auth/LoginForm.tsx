@@ -1,8 +1,7 @@
 'use client';
 
+import { css } from '@styled-system/css';
 import { type FormEvent, useState } from 'react';
-
-import { css } from '../../styled-system/css';
 
 type Props = {
   onSubmit: (email: string, password: string) => Promise<void>;

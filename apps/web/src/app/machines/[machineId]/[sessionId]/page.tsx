@@ -1,5 +1,6 @@
 'use client';
 
+import { css } from '@styled-system/css';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -8,7 +9,6 @@ import { Terminal, type TerminalRef } from '../../../../components/terminal/Term
 import { useWebSocket } from '../../../../hooks/useWebSocket';
 import { useAuthStore } from '../../../../stores/auth';
 import { useRelayStore } from '../../../../stores/relay';
-import { css } from '../../../../styled-system/css';
 
 const TerminalPage = () => {
   const router = useRouter();

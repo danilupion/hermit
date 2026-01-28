@@ -4,7 +4,7 @@ export default defineConfig({
   preflight: true,
   include: ['./src/**/*.{js,jsx,ts,tsx}'],
   exclude: [],
-  outdir: 'src/styled-system',
+  outdir: 'styled-system',
   jsxFramework: 'react',
   theme: {
     extend: {

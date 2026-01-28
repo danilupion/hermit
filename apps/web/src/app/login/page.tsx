@@ -1,12 +1,12 @@
 'use client';
 
+import { css } from '@styled-system/css';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { LoginForm } from '../../components/auth/LoginForm';
 import { api } from '../../lib/api';
 import { useAuthStore } from '../../stores/auth';
-import { css } from '../../styled-system/css';
 
 const LoginPage = () => {
   const router = useRouter();

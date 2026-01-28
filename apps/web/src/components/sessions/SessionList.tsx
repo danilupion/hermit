@@ -2,7 +2,8 @@
 
 import type { SessionInfo } from '@hermit/protocol/types.js';
 
-import { css } from '../../styled-system/css';
+import { css } from '@styled-system/css';
+
 import { SessionCard } from './SessionCard';
 
 type Props = {

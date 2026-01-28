@@ -1,9 +1,8 @@
 'use client';
 
 import '@xterm/xterm/css/xterm.css';
+import { css } from '@styled-system/css';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-
-import { css } from '../../styled-system/css';
 
 type Props = {
   onData?: (data: string) => void;

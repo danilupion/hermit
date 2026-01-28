@@ -2,7 +2,8 @@
 
 import type { MachineInfo } from '@hermit/protocol/types.js';
 
-import { css } from '../../styled-system/css';
+import { css } from '@styled-system/css';
+
 import { MachineCard } from './MachineCard';
 
 type Props = {
