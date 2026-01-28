@@ -8,7 +8,7 @@ import { createWebSocketClient, type WebSocketClient } from '../lib/ws';
 import { useAuthStore } from '../stores/auth';
 import { useRelayStore } from '../stores/relay';
 
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3001/ws/client';
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3550/ws/client';
 
 export type UseWebSocketResult = {
   connected: boolean;

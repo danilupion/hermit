@@ -29,7 +29,7 @@ describe('api', () => {
 
       const result = await api.login('test@example.com', 'password123');
 
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3001/auth/login', {
+      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3550/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: 'test@example.com', password: 'password123' }),
@@ -76,7 +76,7 @@ describe('api', () => {
 
       const result = await api.register('new@example.com', 'password123');
 
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3001/auth/register', {
+      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3550/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: 'new@example.com', password: 'password123' }),
@@ -115,7 +115,7 @@ describe('api', () => {
 
       const result = await api.getMachines('my-token');
 
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3001/api/machines', {
+      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3550/api/machines', {
         headers: { Authorization: 'Bearer my-token' },
       });
       expect(result).toEqual(machines);

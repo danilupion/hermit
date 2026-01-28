@@ -23,7 +23,7 @@ app.get(
   upgradeWebSocket(() => createClientHandlers()),
 );
 
-const port = Number(process.env.PORT) || 3001;
+const port = Number(process.env.PORT) || 3550;
 
 const start = async (): Promise<void> => {
   await runMigrations();

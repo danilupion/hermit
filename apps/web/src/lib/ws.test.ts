@@ -73,19 +73,19 @@ describe('createWebSocketClient', () => {
 
   it('should create a WebSocket connection', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
 
     client.connect();
 
     expect(mockWsInstances.length).toBe(1);
-    expect(getLastWs().url).toBe('ws://localhost:3001/ws/client');
+    expect(getLastWs().url).toBe('ws://localhost:3550/ws/client');
   });
 
   it('should send auth message on open', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
 
@@ -99,7 +99,7 @@ describe('createWebSocketClient', () => {
   it('should call onConnect callback when connected', () => {
     const onConnect = vi.fn();
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
       onConnect,
     });
@@ -113,7 +113,7 @@ describe('createWebSocketClient', () => {
   it('should call onDisconnect callback when disconnected', () => {
     const onDisconnect = vi.fn();
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
       onDisconnect,
     });
@@ -128,7 +128,7 @@ describe('createWebSocketClient', () => {
 
   it('should track connection state', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
 
@@ -145,7 +145,7 @@ describe('createWebSocketClient', () => {
 
   it('should handle incoming messages', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
     const handler = vi.fn();
@@ -163,7 +163,7 @@ describe('createWebSocketClient', () => {
 
   it('should allow unsubscribing from messages', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
     const handler = vi.fn();
@@ -186,7 +186,7 @@ describe('createWebSocketClient', () => {
 
   it('should send messages', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
 
@@ -204,7 +204,7 @@ describe('createWebSocketClient', () => {
 
   it('should not send messages when not connected', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
 
@@ -221,7 +221,7 @@ describe('createWebSocketClient', () => {
 
   it('should auto-reconnect after disconnect', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
 
@@ -239,7 +239,7 @@ describe('createWebSocketClient', () => {
 
   it('should not auto-reconnect after intentional disconnect', () => {
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
     });
 
@@ -258,7 +258,7 @@ describe('createWebSocketClient', () => {
   it('should call onError callback on error', () => {
     const onError = vi.fn();
     const client = createWebSocketClient({
-      url: 'ws://localhost:3001/ws/client',
+      url: 'ws://localhost:3550/ws/client',
       token: 'test-token',
       onError,
     });
