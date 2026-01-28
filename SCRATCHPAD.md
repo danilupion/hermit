@@ -4,6 +4,74 @@ Session handoff notes. Most recent at top.
 
 ---
 
+## Session 7 → Session 8
+
+**Date:** 2025-01-28
+
+### Completed
+
+- E2.2: Session Persistence (ALL COMPLETE)
+  - 2.2.1: Buffer output during client disconnect (via tmux scrollback)
+  - 2.2.2: Replay buffered output on reconnect
+  - 2.2.3: Agent reconnection with session sync
+
+**M2: Bidirectional I/O is now complete!**
+
+### Design Decisions
+
+- **Agent-side buffering with tmux scrollback**: Chose to leverage tmux's native scrollback buffer instead of relay-side buffering. Benefits:
+  - Zero additional memory management
+  - Buffer survives agent process restarts
+  - Scales naturally (each agent manages its own sessions)
+  - Future-proof for horizontal relay scaling
+
+### Files Modified
+
+**Protocol:**
+
+- `packages/protocol/src/agent-messages.ts` - Added `AgentSessionReplayMessage`, replay fields to attach
+- `packages/protocol/src/client-messages.ts` - Added `RelaySessionReplayMessage`, replay fields to attach
+- `packages/protocol/src/schemas.ts` - Updated Zod schemas for new messages
+
+**Agent:**
+
+- `apps/agent/src/tmux.ts` - Added `captureScrollback()` function
+- `apps/agent/src/tmux.test.ts` - Tests for captureScrollback
+- `apps/agent/src/relay-connection.ts` - Added `AttachOptions` type, `sendSessionReplay` method
+- `apps/agent/src/relay-connection.test.ts` - Tests for replay handling
+- `apps/agent/src/commands/connect.ts` - Send scrollback on attach
+
+**Relay:**
+
+- `apps/relay/src/ws/agent-handler.ts` - Forward session_replay, re-attach on agent reconnect
+- `apps/relay/src/ws/client-handler.ts` - Forward replay fields to agent
+
+**Web:**
+
+- `apps/web/src/app/machines/[machineId]/[sessionId]/page.tsx` - Handle session_replay message
+
+### Test Status
+
+- **Protocol:** 12 tests passing
+- **Agent:** 44 tests passing
+- **Relay:** 44 tests passing
+- **Web:** 32 tests passing
+- **Total:** 132 tests passing
+
+### Next Session Priorities
+
+1. End-to-end testing of full M2 flow
+2. Begin M3: Production Ready
+   - E3.1: Reconnection (exponential backoff on client)
+   - E3.2: UI Polish (multi-tab, mobile responsive)
+   - E3.3: Deployment (Docker images, k8s manifests)
+
+### Documentation
+
+- Design document: `docs/plans/2025-01-28-e2.2-session-persistence.md`
+
+---
+
 ## Session 6 → Session 7
 
 **Date:** 2025-01-28

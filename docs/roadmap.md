@@ -2,12 +2,12 @@
 
 ## Milestones Overview
 
-| Milestone | Name              | Status      |
-| --------- | ----------------- | ----------- |
-| M1        | Basic Connection  | Complete    |
-| M2        | Bidirectional I/O | In Progress |
-| M3        | Production Ready  | Planned     |
-| M4        | Polish            | Planned     |
+| Milestone | Name              | Status   |
+| --------- | ----------------- | -------- |
+| M1        | Basic Connection  | Complete |
+| M2        | Bidirectional I/O | Complete |
+| M3        | Production Ready  | Planned  |
+| M4        | Polish            | Planned  |
 
 ---
 
@@ -90,11 +90,11 @@
 
 ### E2.2: Session Persistence
 
-| Story | Description                            | Status  |
-| ----- | -------------------------------------- | ------- |
-| 2.2.1 | Buffer output during client disconnect | Pending |
-| 2.2.2 | Replay buffered output on reconnect    | Pending |
-| 2.2.3 | Agent reconnection with session sync   | Pending |
+| Story | Description                            | Status   |
+| ----- | -------------------------------------- | -------- |
+| 2.2.1 | Buffer output during client disconnect | Complete |
+| 2.2.2 | Replay buffered output on reconnect    | Complete |
+| 2.2.3 | Agent reconnection with session sync   | Complete |
 
 ---
 
