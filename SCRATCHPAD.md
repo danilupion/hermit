@@ -4,6 +4,80 @@ Session handoff notes. Most recent at top.
 
 ---
 
+## Session 5 → Session 6
+
+**Date:** 2025-01-28
+
+### Completed
+
+- E1.5: Web Foundation (all 6 stories complete)
+  - 1.5.1: Created @hermit/web package with Next.js + Panda CSS (from session 4)
+  - 1.5.2: Implemented login page (auth store, API client, LoginForm component)
+  - 1.5.3: Implemented WebSocket context provider (ws client, relay store, useWebSocket hook)
+  - 1.5.4: Implemented machine list page (MachineCard, MachineList components)
+  - 1.5.5: Implemented session list page (SessionCard, SessionList components)
+  - 1.5.6: Implemented terminal view (read-only with xterm.js)
+
+**M1: Basic Connection is now complete!**
+
+### Files Created/Modified
+
+**New files:**
+
+- `apps/web/src/stores/auth.ts` - Auth state (token, user)
+- `apps/web/src/stores/auth.test.ts` - Auth store tests
+- `apps/web/src/stores/relay.ts` - WebSocket connection state
+- `apps/web/src/stores/relay.test.ts` - Relay store tests
+- `apps/web/src/lib/api.ts` - REST API client
+- `apps/web/src/lib/api.test.ts` - API client tests
+- `apps/web/src/lib/ws.ts` - WebSocket client wrapper
+- `apps/web/src/lib/ws.test.ts` - WebSocket client tests
+- `apps/web/src/hooks/useWebSocket.ts` - WebSocket hook with auto-reconnect
+- `apps/web/src/components/auth/LoginForm.tsx` - Login form component
+- `apps/web/src/components/machines/MachineCard.tsx` - Machine card component
+- `apps/web/src/components/machines/MachineList.tsx` - Machine list component
+- `apps/web/src/components/sessions/SessionCard.tsx` - Session card component
+- `apps/web/src/components/sessions/SessionList.tsx` - Session list component
+- `apps/web/src/components/terminal/Terminal.tsx` - xterm.js terminal component
+- `apps/web/src/app/machines/page.tsx` - Machine list page
+- `apps/web/src/app/machines/[machineId]/page.tsx` - Session list page
+- `apps/web/src/app/machines/[machineId]/[sessionId]/page.tsx` - Terminal view page
+
+**Modified files:**
+
+- `apps/web/src/app/page.tsx` - Auth-aware redirect
+- `apps/web/src/app/login/page.tsx` - Full login implementation
+
+### Test Status
+
+- **Protocol:** 12 tests passing
+- **Agent:** 39 tests passing
+- **Relay:** 44 tests passing
+- **Web:** 30 tests passing
+- **Total:** 125 tests passing
+
+### Next Session Priorities
+
+1. **M1 Integration Demo** - Test end-to-end flow:
+   - Start relay with `pnpm --filter @hermit/relay dev`
+   - Start web with `pnpm --filter @hermit/web dev`
+   - Run agent with `pnpm --filter @hermit/agent dev connect`
+   - Verify machines appear in web UI
+   - Verify sessions list and terminal view work
+2. Begin M2: Bidirectional I/O
+   - Add terminal input support
+   - Handle resize events
+   - Support multiple sessions per machine
+
+### Notes
+
+- Terminal view is **read-only** in M1 - input will be added in M2
+- WebSocket reconnection uses fixed 2s delay - exponential backoff will be added in M3
+- Catppuccin-style dark theme used throughout
+- xterm.js CSS imported statically for build compatibility
+
+---
+
 ## Session 4 → Session 5
 
 **Date:** 2025-01-27

@@ -4,9 +4,9 @@
 
 Hermit is a self-hosted terminal relay system. Users run an agent on their machines that connects to a relay server, enabling terminal access from anywhere via a web interface. Sessions persist via tmux.
 
-**Current Session:** 4
-**Current Milestone:** M1 (Basic Connection)
-**Current Epic:** E1.5 in progress (1.5.1 complete)
+**Current Session:** 5
+**Current Milestone:** M2 (Bidirectional I/O)
+**Current Epic:** M1 complete, ready for M2
 
 ## Tech Stack
 
@@ -40,7 +40,7 @@ hermit/
 ├── apps/
 │   ├── agent/      # @hermit/agent ✓
 │   ├── relay/      # @hermit/relay ✓
-│   └── web/        # @hermit/web (in progress) - Next.js + Panda CSS
+│   └── web/        # @hermit/web ✓ - Next.js + Panda CSS
 ├── packages/
 │   └── protocol/   # @hermit/protocol ✓
 └── docker/
@@ -126,7 +126,8 @@ src/
 - [x] Protocol package (E1.2)
 - [x] Relay foundation (E1.3)
 - [x] Agent foundation (E1.4)
-- [ ] Web foundation (E1.5)
+- [x] Web foundation (E1.5)
+- [x] **M1: Basic Connection - COMPLETE**
 
 ## Milestones
 
