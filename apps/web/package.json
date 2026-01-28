@@ -1,0 +1,39 @@
+{
+  "name": "@hermit/web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently 'next dev -p 3000' 'panda --watch'",
+    "build": "panda codegen && next build",
+    "start": "next start -p 3000",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest --run",
+    "prepare": "panda codegen"
+  },
+  "dependencies": {
+    "@hermit/protocol": "workspace:*",
+    "@xterm/addon-fit": "0.10.0",
+    "@xterm/xterm": "6.0.0",
+    "jwt-decode": "4.0.0",
+    "next": "16.1.5",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "zod": "4.3.6",
+    "zustand": "5.0.10"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "1.8.1",
+    "@pandacss/types": "1.8.1",
+    "@slango.configs/eslint": "1.1.47",
+    "@slango.configs/typescript": "1.0.7",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "24.0.12",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@vitejs/plugin-react": "5.1.2",
+    "concurrently": "9.2.1",
+    "jsdom": "26.1.0",
+    "vitest": "4.0.18"
+  }
+}
