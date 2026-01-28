@@ -11,8 +11,10 @@ Session handoff notes. Most recent at top.
 ### Completed
 
 - Continued M2 from previous session
-- E2.1: Terminal I/O
+- E2.1: Terminal I/O (ALL COMPLETE)
   - 2.1.1: Add terminal input to web UI (from previous session)
+  - 2.1.2: Verify resize handling works end-to-end (already implemented)
+  - 2.1.3: Handle multiple attached clients (already implemented)
   - 2.1.4: Add session creation from web UI
 
 ### Files Modified
@@ -36,16 +38,13 @@ Session handoff notes. Most recent at top.
 - **Web:** 32 tests passing
 - **Total:** 127 tests passing
 
-### Remaining E2.1 Stories
-
-- 2.1.2: Verify resize handling works end-to-end
-- 2.1.3: Handle multiple attached clients
-
 ### Next Session Priorities
 
-1. Test E2.1 features end-to-end
-2. Complete remaining E2.1 stories (2.1.2, 2.1.3)
-3. Begin E2.2: Session Persistence
+1. Begin E2.2: Session Persistence
+   - 2.2.1: Buffer output during client disconnect
+   - 2.2.2: Replay buffered output on reconnect
+   - 2.2.3: Agent reconnection with session sync
+2. End-to-end testing of full M2 flow
 
 ---
 
