@@ -1,6 +1,7 @@
 import type { MachineInfo, UserInfo } from '@hermit/protocol/types.js';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3550';
+// Use relative URLs to go through Next.js proxy (avoids CORS)
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 type LoginResponse = {
   user: UserInfo;
