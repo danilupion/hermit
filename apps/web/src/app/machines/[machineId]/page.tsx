@@ -21,14 +21,19 @@ const MachineSessionsPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newSessionName, setNewSessionName] = useState('');
   const [creating, setCreating] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const machine = machines.find((m) => m.id === machineId);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !isAuthenticated()) {
       router.replace('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router]);
 
   useEffect(() => {
     if (connected && machineId) {
@@ -62,7 +67,8 @@ const MachineSessionsPage = () => {
     send({ type: 'create_session', machineId, name: newSessionName.trim() });
   }, [connected, creating, machineId, newSessionName, send]);
 
-  if (!isAuthenticated()) {
+  // Wait for mount to avoid hydration mismatch
+  if (!mounted || !isAuthenticated()) {
     return null;
   }
 

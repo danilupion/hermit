@@ -19,15 +19,20 @@ const TerminalPage = () => {
   const { connected, send, onMessage } = useWebSocket();
   const terminalRef = useRef<TerminalRef>(null);
   const [attached, setAttached] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const machine = machines.find((m) => m.id === machineId);
   const session = sessions.find((s) => s.id === sessionId);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !isAuthenticated()) {
       router.replace('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router]);
 
   // Attach to session and handle messages
   useEffect(() => {
@@ -102,7 +107,8 @@ const TerminalPage = () => {
     [connected, attached, sessionId, send],
   );
 
-  if (!isAuthenticated()) {
+  // Wait for mount to avoid hydration mismatch
+  if (!mounted || !isAuthenticated()) {
     return null;
   }
 

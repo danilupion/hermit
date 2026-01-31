@@ -17,12 +17,17 @@ const MachinesPage = () => {
   const machines = useRelayStore((s) => s.machines);
   const { connected, send } = useWebSocket();
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !isAuthenticated()) {
       router.replace('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router]);
 
   useEffect(() => {
     if (connected) {
@@ -35,6 +40,11 @@ const MachinesPage = () => {
     logout();
     router.push('/login');
   };
+
+  // Wait for mount to avoid hydration mismatch (localStorage not available on server)
+  if (!mounted) {
+    return null;
+  }
 
   if (!isAuthenticated()) {
     return null;
