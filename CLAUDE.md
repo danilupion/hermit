@@ -4,9 +4,9 @@
 
 Hermit is a self-hosted terminal relay system. Users run an agent on their machines that connects to a relay server, enabling terminal access from anywhere via a web interface. Sessions persist via tmux.
 
-**Current Session:** 6
+**Current Session:** 7
 **Current Milestone:** M2 (Bidirectional I/O)
-**Current Epic:** E2.1 (Terminal I/O) - stories 2.1.1 and 2.1.4 complete
+**Current Epic:** E2.1 (Terminal I/O) - stories 2.1.1, 2.1.2, 2.1.4 complete
 
 ## Tech Stack
 
