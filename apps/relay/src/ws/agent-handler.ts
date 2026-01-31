@@ -13,7 +13,12 @@ import {
   updateAgentSessions,
 } from '../registries/agents.js';
 import { getClientsAttachedToSession } from '../registries/clients.js';
-import { findMachineById, updateMachineLastSeen } from '../repositories/machines.js';
+import {
+  findAllMachines,
+  findMachineById,
+  updateMachineLastSeen,
+} from '../repositories/machines.js';
+import type { MachineRow } from '../repositories/machines.js';
 import { verifyMachineToken } from '../services/auth.js';
 
 type AgentState = {
@@ -39,14 +44,32 @@ const handleAgentMessage = async (
   message: AgentMessage,
 ): Promise<void> => {
   if (message.type === 'register') {
-    const machine = await findMachineById(message.machineName);
-    if (!machine) {
-      sendToAgent(ws, { type: 'registered', success: false, error: 'Machine not found' });
-      return;
+    let machine: MachineRow | null = null;
+
+    // If agent has cached machineId, look up by ID (fast path)
+    if (message.machineId) {
+      machine = await findMachineById(message.machineId);
+      if (machine) {
+        const valid = await verifyMachineToken(message.token, machine.token_hash);
+        if (!valid) {
+          machine = null; // Invalid token, don't use this machine
+        }
+      }
     }
 
-    const valid = await verifyMachineToken(message.token, machine.token_hash);
-    if (!valid) {
+    // If no machineId or lookup failed, search by token (slow path for first registration)
+    if (!machine) {
+      const allMachines = await findAllMachines();
+      for (const m of allMachines) {
+        const valid = await verifyMachineToken(message.token, m.token_hash);
+        if (valid) {
+          machine = m;
+          break;
+        }
+      }
+    }
+
+    if (!machine) {
       sendToAgent(ws, { type: 'registered', success: false, error: 'Invalid token' });
       return;
     }

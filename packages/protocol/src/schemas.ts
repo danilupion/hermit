@@ -24,7 +24,12 @@ export const UserInfoSchema = z.object({
 
 // Agent → Relay message schemas
 export const AgentMessageSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('register'), machineName: z.string(), token: z.string() }),
+  z.object({
+    type: z.literal('register'),
+    machineName: z.string(),
+    machineId: z.string().optional(),
+    token: z.string(),
+  }),
   z.object({ type: z.literal('sessions'), sessions: z.array(SessionInfoSchema) }),
   z.object({ type: z.literal('data'), sessionId: z.string(), data: z.string() }),
   z.object({ type: z.literal('session_started'), session: SessionInfoSchema }),

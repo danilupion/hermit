@@ -4,6 +4,7 @@ import type { SessionId, SessionInfo } from './types.js';
 export type AgentRegisterMessage = {
   type: 'register';
   machineName: string;
+  machineId?: string; // Optional - sent if agent has cached ID from previous registration
   token: string;
 };
 

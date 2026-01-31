@@ -14,6 +14,7 @@ export type AttachOptions = {
 export type RelayConnectionConfig = {
   relayUrl: string;
   machineName: string;
+  machineId?: string; // Optional - cached from previous registration
   token: string;
   onRegistered: (machineId: string) => void;
   onListSessions: () => SessionInfo[];
@@ -144,6 +145,7 @@ export const createRelayConnection = (config: RelayConnectionConfig): RelayConne
       send({
         type: 'register',
         machineName: config.machineName,
+        machineId: config.machineId,
         token: config.token,
       });
 

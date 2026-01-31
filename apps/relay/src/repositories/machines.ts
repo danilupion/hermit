@@ -69,3 +69,8 @@ export const findMachineByUserAndName = async (
 export const updateMachineLastSeen = async (id: MachineId): Promise<void> => {
   await query('UPDATE machines SET last_seen = now() WHERE id = $1', [id]);
 };
+
+export const findAllMachines = async (): Promise<MachineRow[]> => {
+  const { rows } = await query<MachineRow>('SELECT * FROM machines');
+  return rows;
+};

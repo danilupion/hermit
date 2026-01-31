@@ -37,6 +37,7 @@ export const connectCommand = (options: ConnectOptions): void => {
   relayConnection = createRelayConnection({
     relayUrl: config.relayUrl,
     machineName: config.machineName,
+    machineId: config.machineId || undefined,
     token: config.token,
 
     onRegistered: (machineId) => {
