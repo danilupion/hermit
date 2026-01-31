@@ -21,14 +21,14 @@
   },
   "dependencies": {
     "@hermit/protocol": "workspace:*",
-    "commander": "14.0.2",
+    "commander": "14.0.3",
     "ws": "8.19.0"
   },
   "devDependencies": {
-    "@slango.configs/eslint": "1.1.47",
+    "@slango.configs/eslint": "1.1.49",
     "@slango.configs/typescript": "1.0.7",
-    "@slango.configs/vitest": "2.0.4",
-    "@types/node": "24.0.10",
+    "@slango.configs/vitest": "2.0.5",
+    "@types/node": "25.1.0",
     "@types/ws": "8.18.1",
     "@vitest/coverage-v8": "4.0.18",
     "eslint": "9.39.2",

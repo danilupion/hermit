@@ -18,12 +18,6 @@ export type UseWebSocketResult = {
 
 export const useWebSocket = (): UseWebSocketResult => {
   const token = useAuthStore((s) => s.token);
-  const setConnected = useRelayStore((s) => s.setConnected);
-  const setMachines = useRelayStore((s) => s.setMachines);
-  const setMachineOnline = useRelayStore((s) => s.setMachineOnline);
-  const setMachineOffline = useRelayStore((s) => s.setMachineOffline);
-  const setSessions = useRelayStore((s) => s.setSessions);
-  const addSession = useRelayStore((s) => s.addSession);
   const connected = useRelayStore((s) => s.connected);
 
   const clientRef = useRef<WebSocketClient | null>(null);
@@ -32,6 +26,16 @@ export const useWebSocket = (): UseWebSocketResult => {
     if (!token) {
       return;
     }
+
+    // Access store setters via getState() to avoid dependency issues
+    const {
+      setConnected,
+      setMachines,
+      setMachineOnline,
+      setMachineOffline,
+      setSessions,
+      addSession,
+    } = useRelayStore.getState();
 
     const client = createWebSocketClient({
       url: WS_URL,
@@ -71,15 +75,7 @@ export const useWebSocket = (): UseWebSocketResult => {
       client.disconnect();
       clientRef.current = null;
     };
-  }, [
-    token,
-    setConnected,
-    setMachines,
-    setMachineOnline,
-    setMachineOffline,
-    setSessions,
-    addSession,
-  ]);
+  }, [token]);
 
   const send = useCallback((message: ClientMessage) => {
     clientRef.current?.send(message);

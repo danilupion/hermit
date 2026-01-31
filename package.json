@@ -21,15 +21,15 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@slango.configs/eslint": "1.1.45",
+    "@slango.configs/eslint": "1.1.49",
     "@slango.configs/lint-staged": "1.1.13",
-    "@slango.configs/prettier": "1.0.8",
+    "@slango.configs/prettier": "1.0.9",
     "@slango.configs/scripts": "1.2.0",
     "eslint": "9.39.2",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "prettier": "3.8.1",
-    "turbo": "2.7.5"
+    "turbo": "2.8.1"
   },
   "engines": {
     "node": "^24.13.0",
