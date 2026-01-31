@@ -11,8 +11,8 @@
     }
   },
   "scripts": {
-    "dev": "tsc --watch -p tsconfig.build.json",
     "build": "tsc -p tsconfig.build.json",
+    "build:watch": "tsc --watch -p tsconfig.build.json",
     "build:check": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix --max-warnings 0",
