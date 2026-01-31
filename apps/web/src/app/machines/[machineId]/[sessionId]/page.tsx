@@ -3,19 +3,22 @@
 import { css } from '@styled-system/css';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Terminal, type TerminalRef } from '../../../../components/terminal/Terminal';
 import { useWebSocket } from '../../../../hooks/useWebSocket';
 import { useAuthStore } from '../../../../stores/auth';
 import { useRelayStore } from '../../../../stores/relay';
 
+const EMPTY_SESSIONS: never[] = [];
+
 const TerminalPage = () => {
   const router = useRouter();
   const { machineId, sessionId } = useParams<{ machineId: string; sessionId: string }>();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const machines = useRelayStore((s) => s.machines);
-  const sessions = useRelayStore((s) => s.sessions[machineId] || []);
+  const sessionsFromStore = useRelayStore((s) => s.sessions[machineId]);
+  const sessions = useMemo(() => sessionsFromStore ?? EMPTY_SESSIONS, [sessionsFromStore]);
   const { connected, send, onMessage } = useWebSocket();
   const terminalRef = useRef<TerminalRef>(null);
   const [attached, setAttached] = useState(false);
@@ -85,7 +88,8 @@ const TerminalPage = () => {
       send({ type: 'detach', sessionId });
       setAttached(false);
     };
-  }, [connected, machineId, sessionId, send, onMessage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- onMessage and send are stable
+  }, [connected, machineId, sessionId]);
 
   const handleResize = useCallback(
     (cols: number, rows: number) => {
