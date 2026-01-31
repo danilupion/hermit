@@ -8,6 +8,8 @@ type RelayState = {
   sessions: Record<string, SessionInfo[]>;
   setConnected: (connected: boolean) => void;
   setMachines: (machines: MachineInfo[]) => void;
+  setMachineOnline: (machine: MachineInfo) => void;
+  setMachineOffline: (machineId: string) => void;
   setSessions: (machineId: string, sessions: SessionInfo[]) => void;
   addSession: (machineId: string, session: SessionInfo) => void;
   clearSessions: (machineId: string) => void;
@@ -20,6 +22,24 @@ export const useRelayStore = create<RelayState>((set) => ({
   sessions: {},
   setConnected: (connected) => set({ connected }),
   setMachines: (machines) => set({ machines }),
+  setMachineOnline: (machine) =>
+    set((state) => {
+      const existing = state.machines.find((m) => m.id === machine.id);
+      if (existing) {
+        // Update existing machine
+        return {
+          machines: state.machines.map((m) => (m.id === machine.id ? { ...m, ...machine } : m)),
+        };
+      }
+      // Add new machine
+      return { machines: [...state.machines, machine] };
+    }),
+  setMachineOffline: (machineId) =>
+    set((state) => ({
+      machines: state.machines.map((m) =>
+        m.id === machineId ? { ...m, online: false, lastSeen: new Date().toISOString() } : m,
+      ),
+    })),
   setSessions: (machineId, sessions) =>
     set((state) => ({
       sessions: { ...state.sessions, [machineId]: sessions },
