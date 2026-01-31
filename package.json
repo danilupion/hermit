@@ -9,7 +9,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "dev": "turbo run dev build:watch",
+    "dev": "turbo dev",
     "build": "turbo build",
     "build:check": "turbo build:check",
     "lint": "eslint . --max-warnings 0 && turbo lint",
