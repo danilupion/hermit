@@ -12,7 +12,7 @@ import {
   unregisterAgent,
   updateAgentSessions,
 } from '../registries/agents.js';
-import { getClientsAttachedToSession } from '../registries/clients.js';
+import { getClientsByUserId, getClientsAttachedToSession } from '../registries/clients.js';
 import {
   findAllMachines,
   findMachineById,
@@ -23,6 +23,7 @@ import { verifyMachineToken } from '../services/auth.js';
 
 type AgentState = {
   machineId: string | null;
+  userId: string | null;
   authenticated: boolean;
 };
 
@@ -32,6 +33,14 @@ const sendToAgent = (ws: WSContext<WebSocket>, message: object): void => {
 
 const broadcastToClients = (machineId: string, sessionId: string, message: object): void => {
   const clients = getClientsAttachedToSession(machineId, sessionId);
+  const json = JSON.stringify(message);
+  for (const client of clients) {
+    client.ws.send(json);
+  }
+};
+
+const broadcastToUserClients = (userId: string, message: object): void => {
+  const clients = getClientsByUserId(userId);
   const json = JSON.stringify(message);
   for (const client of clients) {
     client.ws.send(json);
@@ -75,6 +84,7 @@ const handleAgentMessage = async (
     }
 
     state.machineId = machine.id;
+    state.userId = machine.user_id;
     state.authenticated = true;
 
     registerAgent(machine.id, machine.name, machine.user_id, ws);
@@ -82,6 +92,18 @@ const handleAgentMessage = async (
 
     sendToAgent(ws, { type: 'registered', success: true, machineId: machine.id });
     sendToAgent(ws, { type: 'list_sessions' });
+
+    // Notify all web clients of this user that machine is online
+    broadcastToUserClients(machine.user_id, {
+      type: 'machine_online',
+      machine: {
+        id: machine.id,
+        name: machine.name,
+        online: true,
+        lastSeen: new Date().toISOString(),
+        sessionCount: 0,
+      },
+    });
 
     console.log(`Agent registered: ${machine.name} (${machine.id})`);
     return;
@@ -144,6 +166,7 @@ const handleAgentMessage = async (
 export const createAgentHandlers = () => {
   const state: AgentState = {
     machineId: null,
+    userId: null,
     authenticated: false,
   };
 
@@ -186,6 +209,15 @@ export const createAgentHandlers = () => {
     onClose: (): void => {
       if (state.machineId) {
         unregisterAgent(state.machineId);
+
+        // Notify all web clients of this user that machine is offline
+        if (state.userId) {
+          broadcastToUserClients(state.userId, {
+            type: 'machine_offline',
+            machineId: state.machineId,
+          });
+        }
+
         console.log(`Agent disconnected: ${state.machineId}`);
       }
     },
