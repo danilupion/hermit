@@ -3,22 +3,19 @@
 import { css } from '@styled-system/css';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { SessionList } from '../../../components/sessions/SessionList';
 import { useWebSocket } from '../../../hooks/useWebSocket';
 import { useAuthStore } from '../../../stores/auth';
 import { useRelayStore } from '../../../stores/relay';
 
-const EMPTY_SESSIONS: never[] = [];
-
 const MachineSessionsPage = () => {
   const router = useRouter();
   const { machineId } = useParams<{ machineId: string }>();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const machines = useRelayStore((s) => s.machines);
-  const sessionsFromStore = useRelayStore((s) => s.sessions[machineId]);
-  const sessions = useMemo(() => sessionsFromStore ?? EMPTY_SESSIONS, [sessionsFromStore]);
+  const sessions = useRelayStore((s) => s.sessions[machineId] || []);
   const { connected, send, onMessage } = useWebSocket();
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -61,8 +58,7 @@ const MachineSessionsPage = () => {
     });
 
     return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onMessage is stable
-  }, [connected, creating, machineId, router]);
+  }, [connected, creating, machineId, onMessage, router]);
 
   const handleCreateSession = useCallback(() => {
     if (!newSessionName.trim() || !connected || creating) return;
@@ -71,7 +67,6 @@ const MachineSessionsPage = () => {
     send({ type: 'create_session', machineId, name: newSessionName.trim() });
   }, [connected, creating, machineId, newSessionName, send]);
 
-  // Wait for mount to avoid hydration mismatch
   if (!mounted || !isAuthenticated()) {
     return null;
   }

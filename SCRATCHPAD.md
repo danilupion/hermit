@@ -4,116 +4,106 @@ Session handoff notes. Most recent at top.
 
 ---
 
-## Session 7 → Session 8
-
-**Date:** 2025-01-28
-
-### Completed
-
-- E2.2: Session Persistence (ALL COMPLETE)
-  - 2.2.1: Buffer output during client disconnect (via tmux scrollback)
-  - 2.2.2: Replay buffered output on reconnect
-  - 2.2.3: Agent reconnection with session sync
-
-**M2: Bidirectional I/O is now complete!**
-
-### Design Decisions
-
-- **Agent-side buffering with tmux scrollback**: Chose to leverage tmux's native scrollback buffer instead of relay-side buffering. Benefits:
-  - Zero additional memory management
-  - Buffer survives agent process restarts
-  - Scales naturally (each agent manages its own sessions)
-  - Future-proof for horizontal relay scaling
-
-### Files Modified
-
-**Protocol:**
-
-- `packages/protocol/src/agent-messages.ts` - Added `AgentSessionReplayMessage`, replay fields to attach
-- `packages/protocol/src/client-messages.ts` - Added `RelaySessionReplayMessage`, replay fields to attach
-- `packages/protocol/src/schemas.ts` - Updated Zod schemas for new messages
-
-**Agent:**
-
-- `apps/agent/src/tmux.ts` - Added `captureScrollback()` function
-- `apps/agent/src/tmux.test.ts` - Tests for captureScrollback
-- `apps/agent/src/relay-connection.ts` - Added `AttachOptions` type, `sendSessionReplay` method
-- `apps/agent/src/relay-connection.test.ts` - Tests for replay handling
-- `apps/agent/src/commands/connect.ts` - Send scrollback on attach
-
-**Relay:**
-
-- `apps/relay/src/ws/agent-handler.ts` - Forward session_replay, re-attach on agent reconnect
-- `apps/relay/src/ws/client-handler.ts` - Forward replay fields to agent
-
-**Web:**
-
-- `apps/web/src/app/machines/[machineId]/[sessionId]/page.tsx` - Handle session_replay message
-
-### Test Status
-
-- **Protocol:** 12 tests passing
-- **Agent:** 44 tests passing
-- **Relay:** 44 tests passing
-- **Web:** 32 tests passing
-- **Total:** 132 tests passing
-
-### Next Session Priorities
-
-1. End-to-end testing of full M2 flow
-2. Begin M3: Production Ready
-   - E3.1: Reconnection (exponential backoff on client)
-   - E3.2: UI Polish (multi-tab, mobile responsive)
-   - E3.3: Deployment (Docker images, k8s manifests)
-
-### Documentation
-
-- Design document: `docs/plans/2025-01-28-e2.2-session-persistence.md`
-
----
-
 ## Session 6 → Session 7
 
-**Date:** 2025-01-28
+**Date:** 2025-01-31
 
 ### Completed
 
-- Continued M2 from previous session
-- E2.1: Terminal I/O (ALL COMPLETE)
+- E2.1: Terminal I/O
   - 2.1.1: Add terminal input to web UI (from previous session)
-  - 2.1.2: Verify resize handling works end-to-end (already implemented)
-  - 2.1.3: Handle multiple attached clients (already implemented)
+  - 2.1.2: Verify resize handling - fixed initial size not sent after attach
   - 2.1.4: Add session creation from web UI
+- Fixed many pre-existing lint errors across codebase
+- Fixed port configuration (default ports were 3001, relay runs on 3550)
+- Fixed API to use relative URLs for Next.js proxy
+- Fixed hydration mismatch errors (added mounted state to auth-guarded pages)
+- Moved styled-system outside src and gitignored
+- Cleaned git history with git-filter-repo
 
 ### Files Modified
 
 - `apps/web/src/stores/relay.ts` - Added `addSession` method
 - `apps/web/src/stores/relay.test.ts` - Added tests for `addSession`
-- `apps/web/src/hooks/useWebSocket.ts` - Handle `session_started` message
-- `apps/web/src/app/machines/[machineId]/page.tsx` - New Session button and form
+- `apps/web/src/hooks/useWebSocket.ts` - Handle `session_started`, fixed WS URL
+- `apps/web/src/lib/api.ts` - Use relative URLs for proxy
+- `apps/web/src/app/machines/[machineId]/page.tsx` - New Session button, hydration fix
+- `apps/web/src/app/machines/[machineId]/[sessionId]/page.tsx` - Initial resize fix, hydration fix
+- `apps/web/src/app/machines/page.tsx` - Hydration fix
+- `apps/web/src/app/login/page.tsx` - Hydration fix
+- `apps/web/src/app/page.tsx` - Hydration fix
+- `apps/agent/src/tmux.ts` - Fixed lint errors, typed decodeOctal
+- `apps/agent/src/tmux.test.ts` - Added decodeOctal tests
+- `apps/relay/src/db/pool.ts` - Added drizzle db export
+- `apps/relay/src/db/schema.ts` - Removed unused serial import
+- `apps/web/next.config.ts` - Removed unnecessary async
 
 ### Infrastructure
 
-- Moved `docker-compose.yml` to project root
-- PostgreSQL 18 on port 5490 (to avoid conflicts with parallel projects)
-- Updated relay db/pool.ts connection string
-- Moved styled-system outside src, gitignored, purged from git history
+- `docker-compose.yml` at project root
+- PostgreSQL 18 on port 5490
+- styled-system gitignored, lives at `apps/web/styled-system/`
 
 ### Test Status
 
 - **Protocol:** 12 tests passing
-- **Agent:** 39 tests passing
+- **Agent:** 47 tests passing
 - **Relay:** 44 tests passing
 - **Web:** 32 tests passing
-- **Total:** 127 tests passing
+- **Total:** 135 tests passing
+
+### Remaining E2.1 Stories
+
+- 2.1.3: Handle multiple attached clients
+
+### Missing Feature (add to backlog)
+
+- **Machine registration from web UI** - Currently requires curl to register a machine and get token. Should add a "Register Machine" button on machines page that shows the token once for user to copy.
 
 ### Next Session Priorities
 
-1. Begin E2.2: Session Persistence
-   - 2.2.1: Buffer output during client disconnect
-   - 2.2.2: Replay buffered output on reconnect
-   - 2.2.3: Agent reconnection with session sync
-2. End-to-end testing of full M2 flow
+1. Add machine registration from web UI (new story)
+2. Complete 2.1.3: Handle multiple attached clients
+3. Begin E2.2: Session Persistence
+
+### Demo Instructions
+
+To test the system:
+
+```bash
+# Terminal 1 - Database
+docker compose up
+
+# Terminal 2 - Relay
+pnpm --filter @hermit/relay dev
+
+# Terminal 3 - Web
+pnpm --filter @hermit/web dev
+
+# Create user
+curl -s -X POST http://localhost:3550/auth/register \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"test@example.com","password":"test123"}'
+
+# Register machine (use accessToken from above)
+curl -s -X POST http://localhost:3550/api/machines \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <TOKEN>' \
+  -d '{"name":"my-laptop"}'
+
+# Configure agent (~/.hermit/config.json)
+{
+  "relayUrl": "ws://localhost:3550/ws/agent",
+  "machineName": "my-laptop",
+  "machineId": "<ID>",
+  "token": "<TOKEN>"
+}
+
+# Terminal 4 - Agent
+pnpm --filter @hermit/agent cli connect
+```
+
+Then open http://localhost:3500, login, see machine, create session, use terminal.
 
 ---
 

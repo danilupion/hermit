@@ -4,9 +4,9 @@
 
 Hermit is a self-hosted terminal relay system. Users run an agent on their machines that connects to a relay server, enabling terminal access from anywhere via a web interface. Sessions persist via tmux.
 
-**Current Session:** 8
-**Current Milestone:** M3 (Production Ready)
-**Current Epic:** Ready for E3.1 (Reconnection)
+**Current Session:** 6
+**Current Milestone:** M2 (Bidirectional I/O)
+**Current Epic:** E2.1 (Terminal I/O) - stories 2.1.1 and 2.1.4 complete
 
 ## Tech Stack
 
@@ -115,7 +115,6 @@ src/
 - `docs/plans/2025-01-24-e1.3-relay-foundation.md` - E1.3 implementation plan
 - `docs/plans/2025-01-26-e1.4-agent-foundation.md` - E1.4 implementation plan
 - `docs/plans/2025-01-27-e1.5-web-foundation.md` - E1.5 implementation plan
-- `docs/plans/2025-01-28-e2.2-session-persistence.md` - E2.2 implementation plan
 - `docs/roadmap.md` - Milestone roadmap and stories
 - `SCRATCHPAD.md` - Session handoff notes
 
@@ -128,9 +127,6 @@ src/
 - [x] Agent foundation (E1.4)
 - [x] Web foundation (E1.5)
 - [x] **M1: Basic Connection - COMPLETE**
-- [x] Terminal I/O (E2.1)
-- [x] Session Persistence (E2.2)
-- [x] **M2: Bidirectional I/O - COMPLETE**
 
 ## Milestones
 

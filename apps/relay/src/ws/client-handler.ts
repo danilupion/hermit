@@ -55,7 +55,6 @@ const handleClientMessage = async (
       registerClient(state.clientId, user.id, ws);
 
       sendToClient(ws, { type: 'authenticated', user });
-      console.log(`\n=== CLIENT AUTHENTICATED: ${user.email} (userId: ${user.id}) ===\n`);
     } catch {
       sendToClient(ws, { type: 'error', code: 'INVALID_TOKEN', message: 'Invalid token' });
     }
@@ -63,16 +62,13 @@ const handleClientMessage = async (
   }
 
   if (!state.authenticated || !state.userId) {
-    console.log(`=== REJECTED (not authenticated): ${message.type} ===`);
     sendToClient(ws, { type: 'error', code: 'NOT_AUTHENTICATED', message: 'Not authenticated' });
     return;
   }
 
   switch (message.type) {
     case 'list_machines': {
-      console.log(`\n=== LIST_MACHINES: userId=${state.userId} ===`);
       const dbMachines = await findMachinesByUserId(state.userId);
-      console.log(`=== FOUND ${dbMachines.length} MACHINES IN DB ===`);
       const onlineAgents = getAgentsByUserId(state.userId);
       const onlineIds = new Set(onlineAgents.map((a) => a.machineId));
 
@@ -82,10 +78,6 @@ const handleClientMessage = async (
         sessionCount: isAgentOnline(m.id) ? getAgentSessions(m.id).length : 0,
       }));
 
-      console.log(
-        `=== SENDING ${machines.length} MACHINES ===\n`,
-        JSON.stringify(machines, null, 2),
-      );
       sendToClient(ws, { type: 'machines', machines });
       break;
     }
@@ -232,7 +224,6 @@ export const createClientHandlers = () => {
     onClose: (): void => {
       if (state.authenticated) {
         unregisterClient(state.clientId);
-        console.log(`Client disconnected: ${state.clientId}`);
       }
     },
 

@@ -38,20 +38,14 @@ export const createWebSocketClient = ({
     ws = new WebSocket(url);
 
     ws.onopen = () => {
-      // Send auth immediately, but don't mark as connected until authenticated
+      connected = true;
       ws?.send(JSON.stringify({ type: 'auth', token }));
+      onConnect?.();
     };
 
     ws.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data as string) as RelayToClientMessage;
-
-        // Only mark as connected after successful authentication
-        if (message.type === 'authenticated' && !connected) {
-          connected = true;
-          onConnect?.();
-        }
-
         handlers.forEach((h) => h(message));
       } catch {
         // Ignore invalid JSON
