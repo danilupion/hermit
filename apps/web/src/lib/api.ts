@@ -52,4 +52,19 @@ export const api = {
     });
     return handleResponse<MachineInfo[]>(res);
   },
+
+  async registerMachine(
+    token: string,
+    name: string,
+  ): Promise<{ machine: MachineInfo; token: string }> {
+    const res = await fetch(`${API_URL}/api/machines`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name }),
+    });
+    return handleResponse<{ machine: MachineInfo; token: string }>(res);
+  },
 };
