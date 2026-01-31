@@ -96,7 +96,7 @@ describe('createWebSocketClient', () => {
     expect(ws.send).toHaveBeenCalledWith(JSON.stringify({ type: 'auth', token: 'test-token' }));
   });
 
-  it('should call onConnect callback when connected', () => {
+  it('should call onConnect callback when authenticated', () => {
     const onConnect = vi.fn();
     const client = createWebSocketClient({
       url: 'ws://localhost:3550/ws/client',
@@ -105,7 +105,14 @@ describe('createWebSocketClient', () => {
     });
 
     client.connect();
-    getLastWs().simulateOpen();
+    const ws = getLastWs();
+    ws.simulateOpen();
+
+    // onConnect should NOT be called yet (only after authenticated)
+    expect(onConnect).not.toHaveBeenCalled();
+
+    // Simulate server authentication response
+    ws.simulateMessage({ type: 'authenticated', user: { id: '1', email: 'test@test.com' } });
 
     expect(onConnect).toHaveBeenCalled();
   });
@@ -137,6 +144,12 @@ describe('createWebSocketClient', () => {
     client.connect();
     const ws = getLastWs();
     ws.simulateOpen();
+
+    // Not connected yet until authenticated
+    expect(client.isConnected()).toBe(false);
+
+    // Simulate server authentication response
+    ws.simulateMessage({ type: 'authenticated', user: { id: '1', email: 'test@test.com' } });
     expect(client.isConnected()).toBe(true);
 
     ws.simulateClose();
