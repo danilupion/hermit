@@ -104,16 +104,6 @@ export const toSessionInfo = (session: TmuxSession): SessionInfo => {
   };
 };
 
-export const sendKeys = (sessionId: string, data: string): void => {
-  // Use spawn to handle binary data properly
-  const tmux = spawn('tmux', ['send-keys', '-t', `$${sessionId}`, '-l', data]);
-  tmux.stdin.end();
-};
-
-export const capturePane = (sessionId: string): string => {
-  return runTmux(['capture-pane', '-t', `$${sessionId}`, '-p']);
-};
-
 export const captureScrollback = (sessionId: string, lines: number = 1000): string => {
   // -p: print to stdout
   // -S -N: start N lines from history (negative = from scrollback)
@@ -122,41 +112,73 @@ export const captureScrollback = (sessionId: string, lines: number = 1000): stri
   return runTmux(['capture-pane', '-t', `$${sessionId}`, '-p', '-S', `-${lines}`, '-e', '-J']);
 };
 
-export type PtyProcess = {
-  onData: (callback: (data: string) => void) => void;
-  write: (data: string) => void;
-  resize: (cols: number, rows: number) => void;
-  kill: () => void;
+// Decode octal escapes from tmux control mode output (\012 → newline)
+export const decodeOctal = (str: string): string => {
+  return str.replace(/\\(\d{3})/g, (_match: string, octal: string) =>
+    String.fromCharCode(parseInt(octal, 8)),
+  );
 };
 
-export const attachToSession = (sessionId: string): PtyProcess => {
-  const tmux = spawn('tmux', ['attach-session', '-t', `$${sessionId}`], {
+export type TmuxControlSession = {
+  onOutput: (callback: (data: string) => void) => void;
+  sendKeys: (keys: string) => void;
+  resize: (cols: number, rows: number) => void;
+  close: () => void;
+};
+
+export const attachControlMode = (sessionId: string): TmuxControlSession => {
+  const tmux = spawn('tmux', ['-CC', 'attach-session', '-t', `$${sessionId}`], {
     stdio: ['pipe', 'pipe', 'pipe'],
   });
 
-  const callbacks: ((data: string) => void)[] = [];
+  let outputCallback: ((data: string) => void) | null = null;
+  let buffer = '';
 
-  tmux.stdout.on('data', (data: Buffer) => {
-    const str = data.toString();
-    callbacks.forEach((cb) => cb(str));
+  // Parse control mode output
+  tmux.stdout.on('data', (chunk: Buffer) => {
+    buffer += chunk.toString();
+
+    // Process complete lines
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+    for (const line of lines) {
+      if (line.startsWith('%output ')) {
+        // Format: %output %[pane-id] [octal-escaped-data]
+        const match = line.match(/^%output %\d+ (.*)$/);
+        if (match && outputCallback) {
+          const decoded = decodeOctal(match[1]);
+          outputCallback(decoded);
+        }
+      }
+      // Other notifications (%window-add, %exit, etc.) can be handled here
+    }
   });
 
-  tmux.stderr.on('data', (data: Buffer) => {
-    const str = data.toString();
-    callbacks.forEach((cb) => cb(str));
+  tmux.on('error', (err) => {
+    console.error('Tmux control mode error:', err);
+  });
+
+  tmux.on('close', () => {
+    buffer = '';
+    outputCallback = null;
   });
 
   return {
-    onData: (callback) => {
-      callbacks.push(callback);
+    onOutput: (cb) => {
+      outputCallback = cb;
     },
-    write: (data) => {
-      tmux.stdin.write(data);
+    sendKeys: (keys) => {
+      // Use -l for literal keys (no special interpretation)
+      // Escape special characters for tmux command
+      const escaped = keys.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      tmux.stdin.write(`send-keys -t $${sessionId} -l "${escaped}"\n`);
     },
     resize: (cols, rows) => {
-      runTmux(['resize-window', '-t', `$${sessionId}`, '-x', String(cols), '-y', String(rows)]);
+      tmux.stdin.write(`refresh-client -C ${cols},${rows}\n`);
     },
-    kill: () => {
+    close: () => {
+      tmux.stdin.write('detach-client\n');
       tmux.kill();
     },
   };

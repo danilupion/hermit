@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -29,10 +29,10 @@ export const refreshTokens = pgTable('refresh_tokens', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 
-// Type exports for use in repositories
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
 export type Machine = typeof machines.$inferSelect;
 export type NewMachine = typeof machines.$inferInsert;
-export type RefreshToken = typeof refreshTokens.$inferSelect;
 export type NewRefreshToken = typeof refreshTokens.$inferInsert;
+export type NewUser = typeof users.$inferInsert;
+export type RefreshToken = typeof refreshTokens.$inferSelect;
+// Type exports for use in repositories
+export type User = typeof users.$inferSelect;

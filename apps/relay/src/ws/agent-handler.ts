@@ -4,6 +4,8 @@ import type { WebSocket } from 'ws';
 
 import { safeParseAgentMessage } from '@hermit/protocol/schemas.js';
 
+import type { MachineRow } from '../repositories/machines.js';
+
 import {
   addAgentSession,
   getAgent,
@@ -12,13 +14,12 @@ import {
   unregisterAgent,
   updateAgentSessions,
 } from '../registries/agents.js';
-import { getClientsByUserId, getClientsAttachedToSession } from '../registries/clients.js';
+import { getClientsAttachedToSession, getClientsByUserId } from '../registries/clients.js';
 import {
   findAllMachines,
   findMachineById,
   updateMachineLastSeen,
 } from '../repositories/machines.js';
-import type { MachineRow } from '../repositories/machines.js';
 import { verifyMachineToken } from '../services/auth.js';
 
 type AgentState = {

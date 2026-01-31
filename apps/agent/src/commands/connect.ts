@@ -3,12 +3,11 @@ import type { SessionInfo } from '@hermit/protocol/types.js';
 import { loadConfig, saveConfig } from '../config.js';
 import { createRelayConnection, type RelayConnection } from '../relay-connection.js';
 import {
-  attachToSession,
+  attachControlMode,
   captureScrollback,
   createSession,
   listSessions,
-  type PtyProcess,
-  sendKeys,
+  type TmuxControlSession,
   toSessionInfo,
 } from '../tmux.js';
 
@@ -17,7 +16,7 @@ type ConnectOptions = {
 };
 
 let relayConnection: RelayConnection | null = null;
-const attachedSessions = new Map<string, PtyProcess>();
+const attachedSessions = new Map<string, TmuxControlSession>();
 
 export const connectCommand = (options: ConnectOptions): void => {
   const config = loadConfig();
@@ -76,12 +75,12 @@ export const connectCommand = (options: ConnectOptions): void => {
         }
       }
 
-      // If not already attached, start streaming output
+      // If not already attached, start streaming output via control mode
       if (!attachedSessions.has(sessionId)) {
-        const pty = attachToSession(sessionId);
-        attachedSessions.set(sessionId, pty);
+        const ctrl = attachControlMode(sessionId);
+        attachedSessions.set(sessionId, ctrl);
 
-        pty.onData((data) => {
+        ctrl.onOutput((data) => {
           const base64 = Buffer.from(data).toString('base64');
           relayConnection?.sendData(sessionId, base64);
         });
@@ -95,15 +94,17 @@ export const connectCommand = (options: ConnectOptions): void => {
     },
 
     onData: (sessionId, data) => {
-      // Decode base64 and send to tmux
-      const decoded = Buffer.from(data, 'base64').toString();
-      sendKeys(sessionId, decoded);
+      const ctrl = attachedSessions.get(sessionId);
+      if (ctrl) {
+        const decoded = Buffer.from(data, 'base64').toString();
+        ctrl.sendKeys(decoded);
+      }
     },
 
     onResize: (sessionId, cols, rows) => {
-      const pty = attachedSessions.get(sessionId);
-      if (pty) {
-        pty.resize(cols, rows);
+      const ctrl = attachedSessions.get(sessionId);
+      if (ctrl) {
+        ctrl.resize(cols, rows);
       }
     },
 
@@ -113,8 +114,8 @@ export const connectCommand = (options: ConnectOptions): void => {
 
     onDisconnect: () => {
       // Clean up attached sessions
-      for (const [, pty] of attachedSessions) {
-        pty.kill();
+      for (const [, ctrl] of attachedSessions) {
+        ctrl.close();
       }
       attachedSessions.clear();
     },

@@ -6,7 +6,7 @@ const RELAY_URL = process.env.RELAY_URL || 'http://localhost:3550';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@hermit/protocol'],
-  async rewrites() {
+  rewrites() {
     // Only proxy in dev - production uses ingress routing
     if (!isDev) return [];
     return [

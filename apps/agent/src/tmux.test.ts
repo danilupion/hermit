@@ -16,6 +16,7 @@ import { execFileSync } from 'node:child_process';
 import {
   captureScrollback,
   createSession,
+  decodeOctal,
   isTmuxAvailable,
   killSession,
   listSessions,
@@ -62,9 +63,7 @@ describe('Tmux controller', () => {
 
     it('parses tmux output correctly', () => {
       const now = Math.floor(Date.now() / 1000);
-      mockExecFileSync.mockReturnValueOnce(
-        `$0:main:${now}:0\n$1:dev:${now}:1` as unknown as Buffer,
-      );
+      mockExecFileSync.mockReturnValueOnce(`$0:main:${now}:0\n$1:dev:${now}:1`);
 
       const sessions = listSessions();
       expect(sessions).toHaveLength(2);
@@ -75,14 +74,14 @@ describe('Tmux controller', () => {
     });
 
     it('returns empty array for empty output', () => {
-      mockExecFileSync.mockReturnValueOnce('' as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce('');
       expect(listSessions()).toEqual([]);
     });
   });
 
   describe('sessionExists', () => {
     it('returns true when session exists', () => {
-      mockExecFileSync.mockReturnValueOnce('' as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce('');
       expect(sessionExists('main')).toBe(true);
     });
 
@@ -97,7 +96,7 @@ describe('Tmux controller', () => {
   describe('createSession', () => {
     it('creates a session and returns info', () => {
       const now = Math.floor(Date.now() / 1000);
-      mockExecFileSync.mockReturnValueOnce(`$5:${now}` as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce(`$5:${now}`);
 
       const session = createSession('test-session');
       expect(session.id).toBe('5');
@@ -107,7 +106,7 @@ describe('Tmux controller', () => {
 
     it('passes command when provided', () => {
       const now = Math.floor(Date.now() / 1000);
-      mockExecFileSync.mockReturnValueOnce(`$5:${now}` as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce(`$5:${now}`);
 
       createSession('test-session', 'bash');
       expect(mockExecFileSync).toHaveBeenCalledWith(
@@ -129,7 +128,7 @@ describe('Tmux controller', () => {
 
   describe('killSession', () => {
     it('calls tmux kill-session', () => {
-      mockExecFileSync.mockReturnValueOnce('' as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce('');
       killSession('test-session');
       expect(mockExecFileSync).toHaveBeenCalledWith(
         'tmux',
@@ -171,7 +170,7 @@ describe('Tmux controller', () => {
   describe('captureScrollback', () => {
     it('captures scrollback with correct arguments', () => {
       const scrollbackContent = 'line 1\nline 2\nline 3';
-      mockExecFileSync.mockReturnValueOnce(scrollbackContent as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce(scrollbackContent);
 
       const result = captureScrollback('5');
 
@@ -184,7 +183,7 @@ describe('Tmux controller', () => {
     });
 
     it('uses custom line count when provided', () => {
-      mockExecFileSync.mockReturnValueOnce('content' as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce('content');
 
       captureScrollback('5', 500);
 
@@ -196,10 +195,26 @@ describe('Tmux controller', () => {
     });
 
     it('returns empty string when no scrollback', () => {
-      mockExecFileSync.mockReturnValueOnce('' as unknown as Buffer);
+      mockExecFileSync.mockReturnValueOnce('');
 
       const result = captureScrollback('5');
       expect(result).toBe('');
+    });
+  });
+
+  describe('decodeOctal', () => {
+    it('decodes octal escape sequences', () => {
+      // \012 is octal for newline (10 in decimal)
+      expect(decodeOctal('hello\\012world')).toBe('hello\nworld');
+    });
+
+    it('decodes multiple octal sequences', () => {
+      // \011 is tab (9), \012 is newline (10)
+      expect(decodeOctal('a\\011b\\012c')).toBe('a\tb\nc');
+    });
+
+    it('returns string unchanged if no octal escapes', () => {
+      expect(decodeOctal('hello world')).toBe('hello world');
     });
   });
 });

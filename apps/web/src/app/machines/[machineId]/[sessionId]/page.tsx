@@ -3,46 +3,38 @@
 import { css } from '@styled-system/css';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Terminal, type TerminalRef } from '../../../../components/terminal/Terminal';
 import { useWebSocket } from '../../../../hooks/useWebSocket';
 import { useAuthStore } from '../../../../stores/auth';
 import { useRelayStore } from '../../../../stores/relay';
 
-const EMPTY_SESSIONS: never[] = [];
-
 const TerminalPage = () => {
   const router = useRouter();
   const { machineId, sessionId } = useParams<{ machineId: string; sessionId: string }>();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const machines = useRelayStore((s) => s.machines);
-  const sessionsFromStore = useRelayStore((s) => s.sessions[machineId]);
-  const sessions = useMemo(() => sessionsFromStore ?? EMPTY_SESSIONS, [sessionsFromStore]);
+  const sessions = useRelayStore((s) => s.sessions[machineId] || []);
   const { connected, send, onMessage } = useWebSocket();
   const terminalRef = useRef<TerminalRef>(null);
   const [attached, setAttached] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   const machine = machines.find((m) => m.id === machineId);
   const session = sessions.find((s) => s.id === sessionId);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (mounted && !isAuthenticated()) {
+    if (!isAuthenticated()) {
       router.replace('/login');
     }
-  }, [mounted, isAuthenticated, router]);
+  }, [isAuthenticated, router]);
 
   // Attach to session and handle messages
   useEffect(() => {
     if (!connected || !machineId || !sessionId) return;
 
-    // Attach to session with replay request
-    send({ type: 'attach', machineId, sessionId, requestReplay: true, replayLines: 1000 });
+    // Attach to session
+    send({ type: 'attach', machineId, sessionId });
 
     // Listen for messages
     const unsubscribe = onMessage((msg) => {
@@ -50,18 +42,6 @@ const TerminalPage = () => {
         case 'attached':
           if (msg.sessionId === sessionId) {
             setAttached(true);
-          }
-          break;
-        case 'session_replay':
-          if (msg.sessionId === sessionId) {
-            // Clear terminal and write scrollback replay
-            try {
-              terminalRef.current?.clear();
-              const decoded = atob(msg.data);
-              terminalRef.current?.write(decoded);
-            } catch {
-              // Ignore decoding errors
-            }
           }
           break;
         case 'data':
@@ -88,17 +68,28 @@ const TerminalPage = () => {
       send({ type: 'detach', sessionId });
       setAttached(false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onMessage and send are stable
-  }, [connected, machineId, sessionId]);
+  }, [connected, machineId, sessionId, send, onMessage]);
+
+  // Track latest terminal size for sending after attachment
+  const terminalSizeRef = useRef<{ cols: number; rows: number } | null>(null);
 
   const handleResize = useCallback(
     (cols: number, rows: number) => {
+      terminalSizeRef.current = { cols, rows };
       if (connected && attached) {
         send({ type: 'resize', sessionId, cols, rows });
       }
     },
     [connected, attached, sessionId, send],
   );
+
+  // Send terminal size when attachment completes
+  useEffect(() => {
+    if (connected && attached && terminalSizeRef.current) {
+      const { cols, rows } = terminalSizeRef.current;
+      send({ type: 'resize', sessionId, cols, rows });
+    }
+  }, [connected, attached, sessionId, send]);
 
   const handleData = useCallback(
     (data: string) => {
@@ -111,8 +102,7 @@ const TerminalPage = () => {
     [connected, attached, sessionId, send],
   );
 
-  // Wait for mount to avoid hydration mismatch
-  if (!mounted || !isAuthenticated()) {
+  if (!isAuthenticated()) {
     return null;
   }
 
