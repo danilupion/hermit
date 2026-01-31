@@ -1,8 +1,9 @@
 import { serve } from '@hono/node-server';
 import { createNodeWebSocket } from '@hono/node-ws';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Hono } from 'hono';
 
-import { runMigrations } from './db/index.js';
+import { db } from './db/pool.js';
 import { authRoutes, machineRoutes } from './routes/index.js';
 import { createAgentHandlers, createClientHandlers } from './ws/index.js';
 
@@ -26,7 +27,7 @@ app.get(
 const port = Number(process.env.PORT) || 3550;
 
 const start = async (): Promise<void> => {
-  await runMigrations();
+  await migrate(db, { migrationsFolder: './drizzle' });
   console.log(`Relay server starting on port ${port}`);
   const server = serve({ fetch: (req, info) => app.fetch(req, info), port });
   nodeWs.injectWebSocket(server);

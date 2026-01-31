@@ -1,2 +1,2 @@
-export { closePool, runMigrations } from './migrate.js';
-export { pool, query } from './pool.js';
+export { db, pool, query } from './pool.js';
+export * from './schema.js';
