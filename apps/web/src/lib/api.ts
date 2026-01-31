@@ -1,6 +1,6 @@
 import type { MachineInfo, UserInfo } from '@hermit/protocol/types.js';
 
-// Use relative URLs to go through Next.js proxy (avoids CORS)
+// Use relative URLs - Next.js rewrites will proxy to relay in dev
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 type LoginResponse = {
@@ -51,20 +51,5 @@ export const api = {
       headers: { Authorization: `Bearer ${token}` },
     });
     return handleResponse<MachineInfo[]>(res);
-  },
-
-  async registerMachine(
-    token: string,
-    name: string,
-  ): Promise<{ machine: MachineInfo; token: string }> {
-    const res = await fetch(`${API_URL}/api/machines`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ name }),
-    });
-    return handleResponse<{ machine: MachineInfo; token: string }>(res);
   },
 };
