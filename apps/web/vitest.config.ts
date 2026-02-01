@@ -1,23 +1,21 @@
-import react from '@vitejs/plugin-react';
+import reactPreset from '@slango.configs/vitest/react';
 import path from 'node:path';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    include: ['src/**/*.test.{ts,tsx}'],
-    passWithNoTests: true,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/**', 'src/styled-system/**', '**/*.config.{js,ts}', 'dist/**'],
+export default mergeConfig(
+  reactPreset,
+  defineConfig({
+    test: {
+      include: ['src/**/*.test.{ts,tsx}'],
+      passWithNoTests: true,
+      coverage: {
+        exclude: ['node_modules/**', 'src/styled-system/**', '**/*.config.{js,ts}', 'dist/**'],
+      },
     },
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
     },
-  },
-});
+  }),
+);

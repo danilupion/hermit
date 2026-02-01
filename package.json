@@ -21,7 +21,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@slango.configs/eslint": "1.1.49",
+    "@slango.configs/eslint": "1.1.50",
     "@slango.configs/lint-staged": "1.1.13",
     "@slango.configs/prettier": "1.0.9",
     "@slango.configs/scripts": "1.2.0",

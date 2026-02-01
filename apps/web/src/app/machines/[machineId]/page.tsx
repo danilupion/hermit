@@ -10,12 +10,14 @@ import { useWebSocket } from '../../../hooks/useWebSocket';
 import { useAuthStore } from '../../../stores/auth';
 import { useRelayStore } from '../../../stores/relay';
 
+const EMPTY_SESSIONS: never[] = [];
+
 const MachineSessionsPage = () => {
   const router = useRouter();
   const { machineId } = useParams<{ machineId: string }>();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const machines = useRelayStore((s) => s.machines);
-  const sessions = useRelayStore((s) => s.sessions[machineId] || []);
+  const sessions = useRelayStore((s) => s.sessions[machineId] ?? EMPTY_SESSIONS);
   const { connected, send, onMessage } = useWebSocket();
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);

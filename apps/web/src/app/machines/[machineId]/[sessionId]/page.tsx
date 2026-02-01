@@ -10,12 +10,14 @@ import { useWebSocket } from '../../../../hooks/useWebSocket';
 import { useAuthStore } from '../../../../stores/auth';
 import { useRelayStore } from '../../../../stores/relay';
 
+const EMPTY_SESSIONS: never[] = [];
+
 const TerminalPage = () => {
   const router = useRouter();
   const { machineId, sessionId } = useParams<{ machineId: string; sessionId: string }>();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const machines = useRelayStore((s) => s.machines);
-  const sessions = useRelayStore((s) => s.sessions[machineId] || []);
+  const sessions = useRelayStore((s) => s.sessions[machineId] ?? EMPTY_SESSIONS);
   const { connected, send, onMessage } = useWebSocket();
   const terminalRef = useRef<TerminalRef>(null);
   const [attached, setAttached] = useState(false);
@@ -38,15 +40,27 @@ const TerminalPage = () => {
   useEffect(() => {
     if (!connected || !machineId || !sessionId) return;
 
-    // Attach to session
-    send({ type: 'attach', machineId, sessionId });
+    // Clear terminal for new session
+    terminalRef.current?.clear();
 
-    // Listen for messages
+    // Set up message listener BEFORE sending attach to avoid race condition
     const unsubscribe = onMessage((msg) => {
       switch (msg.type) {
         case 'attached':
           if (msg.sessionId === sessionId) {
             setAttached(true);
+          }
+          break;
+        case 'session_replay':
+          if (msg.sessionId === sessionId) {
+            // Clear terminal and write scrollback history
+            try {
+              terminalRef.current?.clear();
+              const decoded = atob(msg.data);
+              terminalRef.current?.write(decoded);
+            } catch {
+              // Ignore decoding errors
+            }
           }
           break;
         case 'data':
@@ -67,6 +81,9 @@ const TerminalPage = () => {
           break;
       }
     });
+
+    // Now attach to session (after listener is ready)
+    send({ type: 'attach', machineId, sessionId });
 
     return () => {
       unsubscribe();
