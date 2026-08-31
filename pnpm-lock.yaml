@@ -52,8 +52,8 @@ importers:
         specifier: 1.1.50
         version: 1.1.50(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2))(eslint@9.39.2)(prettier@3.8.1)(typescript@5.9.3)
       '@slango.configs/typescript':
-        specifier: 1.0.7
-        version: 1.0.7(typescript@5.9.3)
+        specifier: 2.0.15
+        version: 2.0.15(typescript@5.9.3)
       '@slango.configs/vitest':
         specifier: 2.0.6
         version: 2.0.6(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(@vitest/coverage-v8@4.0.18(vitest@4.0.18))(@vitest/ui@4.0.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
@@ -116,8 +116,8 @@ importers:
         specifier: 1.1.50
         version: 1.1.50(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2)(prettier@3.8.1)(typescript@5.9.3)
       '@slango.configs/typescript':
-        specifier: 1.0.7
-        version: 1.0.7(typescript@5.9.3)
+        specifier: 2.0.15
+        version: 2.0.15(typescript@5.9.3)
       '@slango.configs/vitest':
         specifier: 2.0.6
         version: 2.0.6(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(@vitest/coverage-v8@4.0.18(vitest@4.0.18))(@vitest/ui@4.0.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
@@ -192,8 +192,8 @@ importers:
         specifier: 1.1.50
         version: 1.1.50(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2)(prettier@3.8.1)(typescript@5.9.3)
       '@slango.configs/typescript':
-        specifier: 1.0.7
-        version: 1.0.7(typescript@5.9.3)
+        specifier: 2.0.15
+        version: 2.0.15(typescript@5.9.3)
       '@slango.configs/vitest':
         specifier: 2.0.6
         version: 2.0.6(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(@vitest/coverage-v8@4.0.18(vitest@4.0.18))(@vitest/ui@4.0.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
@@ -226,8 +226,8 @@ importers:
         specifier: 1.1.50
         version: 1.1.50(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2)(prettier@3.8.1)(typescript@5.9.3)
       '@slango.configs/typescript':
-        specifier: 1.0.7
-        version: 1.0.7(typescript@5.9.3)
+        specifier: 2.0.15
+        version: 2.0.15(typescript@5.9.3)
       '@slango.configs/vitest':
         specifier: 2.0.6
         version: 2.0.6(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(@vitest/coverage-v8@4.0.18(vitest@4.0.18))(@vitest/ui@4.0.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
@@ -427,11 +427,11 @@ packages:
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild-kit/esm-loader@2.6.5':
     resolution: {integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild/aix-ppc64@0.25.12':
     resolution: {integrity: sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA==}
@@ -952,6 +952,7 @@ packages:
   '@hono/node-ws@1.3.0':
     resolution: {integrity: sha512-ju25YbbvLuXdqBCmLZLqnNYu1nbHIQjoyUqA8ApZOeL1k4skuiTcw5SW77/5SUYo2Xi2NVBJoVlfQurnKEp03Q==}
     engines: {node: '>=18.14.1'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       '@hono/node-server': ^1.19.2
       hono: ^4.6.0
@@ -1525,10 +1526,10 @@ packages:
     resolution: {integrity: sha512-mJlkpF+r8XbZfG9nMmNP2Mv1gmmuu3A/dHmLRgalSI3/sA5AVQ0MyZdgqOwlOLZhaU3dyFFanduVJ6OF1jAPgg==}
     hasBin: true
 
-  '@slango.configs/typescript@1.0.7':
-    resolution: {integrity: sha512-cWOvYThYs4PEzRs7XGXYZKDP4Ch9OX9Yz4tmnXzpZkLABuu3bOT3cZ/oXQzuZobjUhsZyE85FgFPX1ViMao39w==}
+  '@slango.configs/typescript@2.0.15':
+    resolution: {integrity: sha512-XJfdE/Zj3um9tVmMhYdz8KhJDflq/McQl1jMjgRS6uki0mScqJAIrbSFwTL5i/5NCCINdjfvOC24zNzbqpOgbg==}
     peerDependencies:
-      typescript: ^5.9.3
+      typescript: ^7.0.2
 
   '@slango.configs/vitest@2.0.6':
     resolution: {integrity: sha512-lnqFYiKK6o2yF4zoLXMJPUwsJZ8USNE+tC4V9aZgCrbxeIJAsrogmtFPr5rQZuFvZj+3+clNcHVa3VsPzqur+w==}
@@ -2714,6 +2715,7 @@ packages:
   eslint@9.39.2:
     resolution: {integrity: sha512-LEyamqS7W5HB3ujJyvi0HQK/dtVINZvd5mAAp9eT5S/ujByGjiZLCzPcHVzuXbpJDJF/cxwHlfceVUDZ2lnSTw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -4261,6 +4263,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -5767,7 +5770,7 @@ snapshots:
 
   '@slango.configs/scripts@1.2.0': {}
 
-  '@slango.configs/typescript@1.0.7(typescript@5.9.3)':
+  '@slango.configs/typescript@2.0.15(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
 
@@ -6914,7 +6917,7 @@ snapshots:
       eslint: 9.39.2
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2)
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2)
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2)
       eslint-plugin-react: 7.37.5(eslint@9.39.2)
       eslint-plugin-react-hooks: 7.0.1(eslint@9.39.2)
@@ -7089,7 +7092,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2):
+  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
