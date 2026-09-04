@@ -29,27 +29,27 @@
     "@hermit/protocol": "workspace:*",
     "@hono/node-server": "1.19.9",
     "@hono/node-ws": "1.3.0",
-    "@hono/zod-validator": "0.7.6",
-    "argon2": "0.44.0",
+    "@hono/zod-validator": "0.9.1",
+    "argon2": "0.45.1",
     "drizzle-orm": "0.45.1",
-    "hono": "4.11.8",
-    "jose": "6.1.3",
-    "pg": "8.18.0",
-    "zod": "4.3.6"
+    "hono": "4.13.5",
+    "jose": "6.2.10",
+    "pg": "8.23.0",
+    "zod": "4.5.4"
   },
   "devDependencies": {
-    "@slango.configs/eslint": "1.1.50",
+    "@slango.configs/eslint": "1.2.44",
     "@slango.configs/typescript": "1.0.7",
     "@slango.configs/vitest": "2.0.6",
-    "@types/node": "25.2.1",
-    "@types/pg": "8.16.0",
+    "@types/node": "25.9.5",
+    "@types/pg": "8.23.1",
     "@types/ws": "8.18.1",
-    "@vitest/coverage-v8": "4.0.18",
+    "@vitest/coverage-v8": "4.1.11",
     "drizzle-kit": "0.31.8",
     "eslint": "9.39.2",
-    "msw": "2.12.8",
-    "tsx": "4.21.0",
+    "msw": "2.15.0",
+    "tsx": "4.23.13",
     "typescript": "5.9.3",
-    "vitest": "4.0.18"
+    "vitest": "4.1.11"
   }
 }
