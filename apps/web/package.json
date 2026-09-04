@@ -16,23 +16,23 @@
     "@xterm/addon-fit": "0.11.0",
     "@xterm/xterm": "6.0.0",
     "jwt-decode": "4.0.0",
-    "next": "16.1.6",
+    "next": "16.3.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "zod": "4.3.6",
+    "zod": "4.5.4",
     "zustand": "5.0.11"
   },
   "devDependencies": {
-    "@pandacss/dev": "1.8.1",
-    "@pandacss/types": "1.8.1",
-    "@slango.configs/eslint": "1.1.50",
+    "@pandacss/dev": "1.12.0",
+    "@pandacss/types": "1.12.0",
+    "@slango.configs/eslint": "1.2.44",
     "@slango.configs/typescript": "1.0.7",
     "@slango.configs/vitest": "2.0.6",
-    "@types/node": "25.2.1",
+    "@types/node": "25.9.5",
     "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3",
     "concurrently": "9.2.1",
     "typescript": "5.9.3",
-    "vitest": "4.0.18"
+    "vitest": "4.1.11"
   }
 }
