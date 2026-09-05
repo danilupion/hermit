@@ -49,7 +49,7 @@
     "eslint": "9.39.2",
     "msw": "2.12.8",
     "tsx": "4.21.0",
-    "typescript": "5.9.3",
+    "typescript": "7.0.2",
     "vitest": "4.0.18"
   }
 }
