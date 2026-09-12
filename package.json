@@ -23,9 +23,9 @@
   "devDependencies": {
     "@slango.configs/eslint": "1.1.50",
     "@slango.configs/lint-staged": "1.1.13",
-    "@slango.configs/prettier": "1.0.9",
-    "@slango.configs/scripts": "1.2.0",
-    "eslint": "9.39.2",
+    "@slango.configs/prettier": "1.0.29",
+    "@slango.configs/scripts": "1.2.2",
+    "eslint": "9.39.5",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "prettier": "3.8.1",
