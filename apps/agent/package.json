@@ -22,7 +22,7 @@
   "dependencies": {
     "@hermit/protocol": "workspace:*",
     "commander": "14.0.3",
-    "ws": "8.19.0"
+    "ws": "8.21.0"
   },
   "devDependencies": {
     "@slango.configs/eslint": "1.1.50",
