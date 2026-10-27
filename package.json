@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@slango.configs/eslint": "1.1.50",
-    "@slango.configs/lint-staged": "1.1.13",
+    "@slango.configs/lint-staged": "2.0.11",
     "@slango.configs/prettier": "1.0.9",
     "@slango.configs/scripts": "1.2.0",
     "eslint": "9.39.2",
